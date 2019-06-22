@@ -13,27 +13,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-public class MainController {
+@RequestMapping(value = "/screener")
+
+public class ScreenerController {
 
     @Autowired
     ScreenedDataService screenedDataService;
 
     @RequestMapping(method = RequestMethod.POST,value = "/saveScreenedQuestion")
-    public ResponseEntity<?> saveScreenedQuestion(@RequestBody IncommingDataDto incommingDataDto)
+    public ResponseEntity<?> saveScreenedQuestion(@RequestBody List<IncommingDataDto> incommingDataDto1)
     {
-        ScreenedDataEntityClass screenedDataEntityClass=new ScreenedDataEntityClass();
-        BeanUtils.copyProperties(incommingDataDto,screenedDataEntityClass);
-        try{
-            screenedDataService.saveQuestion(screenedDataEntityClass);
-            return new ResponseEntity<>("{\"status\":\"saved\"}", HttpStatus.OK);
+        for(IncommingDataDto incommingDataDto:incommingDataDto1) {
+            ScreenedDataEntityClass screenedDataEntityClass = new ScreenedDataEntityClass();
+            BeanUtils.copyProperties(incommingDataDto, screenedDataEntityClass);
+            try {
+                screenedDataService.saveQuestion(screenedDataEntityClass);
+            } catch (Exception e) {
+                return new ResponseEntity<>("{\"status\":\"unable to save\"}", HttpStatus.OK);
+            }
         }
-        catch (Exception e)
-        {
-            return new ResponseEntity<>("{\"status\":\"unable to save\"}",HttpStatus.OK);
-        }
+        return new ResponseEntity<>("{\"status\":\"saved\"}", HttpStatus.OK);
 
     }
+
 
 
 }
