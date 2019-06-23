@@ -16,4 +16,14 @@ public class StaticContestService implements StaticContestInterface {
     public StaticContestEntityClass saveContest(StaticContestEntityClass staticContestEntityClass) {
         return staticContestRepository.save(staticContestEntityClass);
     }
+
+    @Override
+    public StaticContestEntityClass getContestById(String id) {
+        return staticContestRepository.findOne(id);
+    }
+
+    @Override
+    public void deleteContestById(String id) {
+        staticContestRepository.delete(id);
+    }
 }
