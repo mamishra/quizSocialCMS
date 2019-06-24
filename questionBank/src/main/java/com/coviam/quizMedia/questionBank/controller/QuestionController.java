@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/questionbank")
+@CrossOrigin("*")
 public class QuestionController {
 
     @Autowired
@@ -46,6 +47,38 @@ public class QuestionController {
         });
 
         return new ResponseEntity<List<QuestionDto>>(questionDtoList,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getAll/{category}")
+    public ResponseEntity<?> getquestionByCategory(@PathVariable("category") String category){
+
+        List<Question> questionList = questionService.getQuestionByCategory(category);
+        List<QuestionDto> questionDtoList = new ArrayList<>();
+        questionList.forEach((que)->{
+            QuestionDto questionDto = new QuestionDto();
+            BeanUtils.copyProperties(que, questionDto);
+            questionDtoList.add(questionDto);
+        });
+
+        return new ResponseEntity<List<QuestionDto>>(questionDtoList,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getQuestion/{queNo}")
+    public ResponseEntity<?> getQuestionByQueNo(@PathVariable("queNo") String queNo){
+
+        Question question = questionService.getQuestionByQueNo(queNo);
+        QuestionDto questionDto = new QuestionDto();
+        BeanUtils.copyProperties(question, questionDto);
+
+        return new ResponseEntity<QuestionDto>(questionDto,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+    public ResponseEntity<?> getquestionByCategory(@RequestParam(name = "queNo") String queNo, @RequestParam(name = "category") String category){
+
+        List<String> list = questionService.deleteByIdCategory(queNo,category);
+
+        return new ResponseEntity<List<String>>(list,HttpStatus.OK);
     }
 
 

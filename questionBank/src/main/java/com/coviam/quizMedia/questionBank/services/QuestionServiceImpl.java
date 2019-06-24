@@ -19,6 +19,11 @@ public class QuestionServiceImpl implements QuestionService {
 
 
     @Override
+    public Question getQuestionByQueNo(String queNo) {
+        return questionRepository.getQuestionByQueNo(queNo);
+    }
+
+    @Override
     public List<Question> getQuestionListFromFile(String fileName) {
 
         String csvFile = fileName;
@@ -26,7 +31,7 @@ public class QuestionServiceImpl implements QuestionService {
         String cvsSplitBy = ",";
         List<Question> questionList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            while (!(line = br.readLine()).equals("")) {
+            while (!(line = br.readLine()).equals("END")) {
 
                 // use comma as separator
 
@@ -47,6 +52,7 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setCategory(array[11]);
 
                 questionList.add(question);
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,12 +60,23 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.save(questionList);
     }
 
+    @Override
+    public List<String> deleteByIdCategory(String id, String category) {
+        List<Question> queList = questionRepository.getQuestionByCategory(category);
+        List<String> list = new ArrayList<>();
+        queList.forEach((que)->{
+            if (Integer.parseInt(que.getQueNo())>Integer.parseInt(id)){
+                list.add(que.getQueNo());
+                questionRepository.deleteQuestionByQueNo(que.getQueNo());
+            }
+        });
+        return list;
+    }
 
-//    @Override
-//    public List<Question> saveAllQuestions(List<Question> questionList) {
-//
-//        return questionRepository.save(questionList);
-//    }
+    @Override
+    public List<Question> getQuestionByCategory(String category) {
+        return questionRepository.getQuestionByCategory(category);
+    }
 
     @Override
     public List<Question> getAllQuestions() {
