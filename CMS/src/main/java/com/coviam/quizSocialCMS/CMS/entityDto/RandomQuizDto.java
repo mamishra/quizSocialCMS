@@ -1,17 +1,15 @@
 package com.coviam.quizSocialCMS.CMS.entityDto;
 
 import com.coviam.quizSocialCMS.CMS.entity.ScreenedDataEntityClass;
+import com.coviam.quizSocialCMS.CMS.service.impl.ScreenedDataService;
 
 import java.util.Date;
 import java.util.List;
 
-public class StaticContestDto {
+public class RandomQuizDto {
     String contestName;
     String contestId;
-    List<ScreenedQuestionDto> questionId;
-    Date startTime;
-    Date endTime;
-    Date durationOfContest;
+    ScreenedDataEntityClass questionId;
     String category;
 
     public String getContestName() {
@@ -30,36 +28,12 @@ public class StaticContestDto {
         this.contestId = contestId;
     }
 
-    public List<ScreenedQuestionDto> getQuestionId() {
+    public ScreenedDataEntityClass getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(List<ScreenedQuestionDto> questionId) {
+    public void setQuestionId(ScreenedDataEntityClass questionId) {
         this.questionId = questionId;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Date getDurationOfContest() {
-        return durationOfContest;
-    }
-
-    public void setDurationOfContest(Date durationOfContest) {
-        this.durationOfContest = durationOfContest;
     }
 
     public String getCategory() {

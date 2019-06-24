@@ -1,26 +1,15 @@
 package com.coviam.quizSocialCMS.CMS.entityDto;
 
-import com.coviam.quizSocialCMS.CMS.entity.ScreenedDataEntityClass;
-
 import java.util.Date;
 import java.util.List;
 
-public class StaticContestDto {
-    String contestName;
+public class ActiveContestDto {
     String contestId;
-    List<ScreenedQuestionDto> questionId;
+    String contestName;
     Date startTime;
     Date endTime;
     Date durationOfContest;
     String category;
-
-    public String getContestName() {
-        return contestName;
-    }
-
-    public void setContestName(String contestName) {
-        this.contestName = contestName;
-    }
 
     public String getContestId() {
         return contestId;
@@ -30,12 +19,12 @@ public class StaticContestDto {
         this.contestId = contestId;
     }
 
-    public List<ScreenedQuestionDto> getQuestionId() {
-        return questionId;
+    public String getContestName() {
+        return contestName;
     }
 
-    public void setQuestionId(List<ScreenedQuestionDto> questionId) {
-        this.questionId = questionId;
+    public void setContestName(String contestName) {
+        this.contestName = contestName;
     }
 
     public Date getStartTime() {

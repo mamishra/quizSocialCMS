@@ -13,9 +13,18 @@ public class ScreenedDataEntityClass {
     String answers[];
     String answerType;
     String questionType;
-    String rightAnswers[];
+    String rightAnswers;
     String difficultyLevel;
     String resourceUrl;
+    String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public static String getCollectionName() {
         return COLLECTION_NAME;
@@ -61,11 +70,11 @@ public class ScreenedDataEntityClass {
         this.questionType = questionType;
     }
 
-    public String[] getRightAnswers() {
+    public String getRightAnswers() {
         return rightAnswers;
     }
 
-    public void setRightAnswers(String[] rightAnswers) {
+    public void setRightAnswers(String rightAnswers) {
         this.rightAnswers = rightAnswers;
     }
 
