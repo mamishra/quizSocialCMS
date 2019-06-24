@@ -65,7 +65,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<Question> queList = questionRepository.getQuestionByCategory(category);
         List<String> list = new ArrayList<>();
         queList.forEach((que)->{
-            if (Integer.parseInt(que.getQueNo())>Integer.parseInt(id)){
+            if (Integer.parseInt(que.getQueNo())<Integer.parseInt(id)){
                 list.add(que.getQueNo());
                 questionRepository.deleteQuestionByQueNo(que.getQueNo());
             }
