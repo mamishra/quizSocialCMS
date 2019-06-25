@@ -15,6 +15,7 @@ public class State {
     private String contestName;
     private String contestId;
     private Map<String, String> response;
+    
 
     public State() {
     }

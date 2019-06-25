@@ -61,6 +61,17 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> getQuestionListByQuesNos(String[] queNoList) {
+
+        List<Question> questionList = new ArrayList<>();
+        for (String que : queNoList){
+            Question question = questionRepository.getQuestionByQueNo(que);
+            questionList.add(question);
+        }
+        return questionList;
+    }
+
+    @Override
     public List<String> deleteByIdCategory(String id, String category) {
         List<Question> queList = questionRepository.getQuestionByCategory(category);
         List<String> list = new ArrayList<>();

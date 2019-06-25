@@ -73,6 +73,20 @@ public class QuestionController {
         return new ResponseEntity<QuestionDto>(questionDto,HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getQuestionList")
+    public ResponseEntity<?> getQuestionListByQueNos(@RequestBody String[] queNoList){
+
+        List<Question> questionList = questionService.getQuestionListByQuesNos(queNoList);
+        List<QuestionDto> questionDtoList = new ArrayList<>();
+        questionList.forEach((que)->{
+            QuestionDto questionDto = new QuestionDto();
+            BeanUtils.copyProperties(que, questionDto);
+            questionDtoList.add(questionDto);
+        });
+
+        return new ResponseEntity<List<QuestionDto>>(questionDtoList,HttpStatus.OK);
+    }
+
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
     public ResponseEntity<?> getquestionByCategory(@RequestParam(name = "queNo") String queNo, @RequestParam(name = "category") String category){
 

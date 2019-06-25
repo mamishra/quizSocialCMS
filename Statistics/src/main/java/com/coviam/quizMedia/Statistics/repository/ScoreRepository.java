@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ScoreRepository extends MongoRepository<Score, String> {
     List<Score> getScoreByContestId(String contestId);
+    List<Score> getScoreByUserId(String userId);
 }
