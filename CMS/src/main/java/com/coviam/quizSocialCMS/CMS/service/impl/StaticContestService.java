@@ -40,7 +40,15 @@ public class StaticContestService implements StaticContestInterface {
         return staticContestRepository.findAll();
     }
 
+    @Override
+    public Page<StaticContestEntityClass> getContestByCategory(String category,int page) {
+        return staticContestRepository.findByCategory(category,new PageRequest(page,5));
+    }
 
+    @Override
+    public Page<StaticContestEntityClass> getContestByContestName(String name,int page) {
+        return staticContestRepository.findByContestName(name,new PageRequest(page,5));
+    }
 
 
 }

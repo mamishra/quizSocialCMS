@@ -14,14 +14,8 @@ import java.util.List;
 @Repository
 public interface StaticContestRepository extends MongoRepository<StaticContestEntityClass,String> {
 
-    //public List<StaticContestEntityClass> findAll();
+    public Page<StaticContestEntityClass> findByCategory(String name,Pageable pageable);
 
-    public List<ActiveContestDto> findByOrderByContestId();
-
-    @Query("{}")
-    public List<StaticContestEntityClass> findSome();
-
-//    @Query(value = "db.getActiveContest.find({})")
-//    public List<StaticContestEntityClass> findAllContest();
+    public Page<StaticContestEntityClass> findByContestName(String name,Pageable pageable);
 
 }

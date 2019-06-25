@@ -19,7 +19,9 @@ public class CmsApplication extends AbstractMongoConfiguration {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CmsApplication.class, args);
+
 	}
+
 
 	@Override
 	protected String getDatabaseName() {
