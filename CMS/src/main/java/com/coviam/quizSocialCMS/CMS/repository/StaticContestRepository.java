@@ -15,7 +15,6 @@ import java.util.List;
 public interface StaticContestRepository extends MongoRepository<StaticContestEntityClass,String> {
 
     public Page<StaticContestEntityClass> findByCategory(String name,Pageable pageable);
-
     public Page<StaticContestEntityClass> findByContestName(String name,Pageable pageable);
 
 }
