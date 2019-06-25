@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Map;
 
 @Document
-public class State {
+public class  State {
 
     @Id
     private String stateId;

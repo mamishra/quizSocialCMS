@@ -154,6 +154,13 @@ public class CmsController {
         return new ResponseEntity<List<ActiveContestDto>>(finalList,HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/getContestQuestions/{contestId}")
+    public ResponseEntity<List<ScreenedDataEntityClass>> getContestQuestion(@PathVariable("contestId")String contestId)
+    {
+        List<ScreenedDataEntityClass> list=staticContestService.getContestById(contestId).getQuestionId();
+        return new ResponseEntity<List<ScreenedDataEntityClass>>(list,HttpStatus.OK);
+    }
+
 
 
     private class ContestEndTaskScheduler extends TimerTask{
