@@ -8,4 +8,5 @@ import java.util.List;
 public interface CategoryInteface {
     public CategoryEntityClass saveCategory(CategoriesDto categoriesDto);
     public List<CategoryEntityClass> getCategories();
+
 }

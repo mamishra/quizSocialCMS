@@ -1,9 +1,13 @@
 package com.coviam.quizSocialCMS.CMS.entity;
 
+import com.coviam.quizSocialCMS.CMS.entityDto.ScreenedQuestionDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
+import java.util.List;
+
 @Document(collection = StaticContestEntityClass.COLLECTION_NAME)
 public class StaticContestEntityClass {
 
@@ -12,12 +16,20 @@ public class StaticContestEntityClass {
     @Id
     String contestId;
     String contestName;
-    String questionId[];
+    @Field(value = "questionId")
+    List<ScreenedDataEntityClass> questionId;
     Date startTime;
     Date endTime;
     Date durationOfContest;
     String category;
 
+    public List<ScreenedDataEntityClass> getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(List<ScreenedDataEntityClass> questionId) {
+        this.questionId = questionId;
+    }
     public String getContestId() {
         return contestId;
     }
@@ -34,13 +46,13 @@ public class StaticContestEntityClass {
         this.contestName = contestName;
     }
 
-    public String[] getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(String[] questionId) {
-        this.questionId = questionId;
-    }
+//    public List<ScreenedDataEntityClass> getQuestionId() {
+//        return questionId;
+//    }
+//
+//    public void setQuestionId(List<ScreenedDataEntityClass> questionId) {
+//        this.questionId = questionId;
+//    }
 
     public Date getStartTime() {
         return startTime;
@@ -72,5 +84,18 @@ public class StaticContestEntityClass {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "StaticContestEntityClass{" +
+                "contestId='" + contestId + '\'' +
+                ", contestName='" + contestName + '\'' +
+                ", questionId="  +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", durationOfContest=" + durationOfContest +
+                ", category='" + category + '\'' +
+                '}';
     }
 }

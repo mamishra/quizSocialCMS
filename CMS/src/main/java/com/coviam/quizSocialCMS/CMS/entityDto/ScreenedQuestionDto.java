@@ -1,14 +1,23 @@
 package com.coviam.quizSocialCMS.CMS.entityDto;
 
-public class IncommingDataDto {
+public class ScreenedQuestionDto {
     String id;
     String questionText;
     String answers[];
     String answerType;
     String questionType;
-    String rightAnswers[];
+    String rightAnswers;
     String difficultyLevel;
     String url;
+    String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getId() {
         return id;
@@ -18,11 +27,11 @@ public class IncommingDataDto {
         this.id = id;
     }
 
-    public String[] getRightAnswers() {
+    public String getRightAnswers() {
         return rightAnswers;
     }
 
-    public void setRightAnswers(String[] rightAnswers) {
+    public void setRightAnswers(String rightAnswers) {
         this.rightAnswers = rightAnswers;
     }
 
@@ -58,13 +67,6 @@ public class IncommingDataDto {
         this.answerType = answerType;
     }
 
-    public String[] getRightAnswer() {
-        return rightAnswers;
-    }
-
-    public void setRightAnswer(String rightAnswer[]) {
-        this.rightAnswers = rightAnswer;
-    }
 
     public String getDifficultyLevel() {
         return difficultyLevel;

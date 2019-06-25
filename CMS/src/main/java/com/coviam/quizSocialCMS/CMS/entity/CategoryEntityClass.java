@@ -1,7 +1,9 @@
 package com.coviam.quizSocialCMS.CMS.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = CategoryEntityClass.COLLECTION_NAME)
 public class CategoryEntityClass {
 
     public final static String COLLECTION_NAME="categoriesCollection";
