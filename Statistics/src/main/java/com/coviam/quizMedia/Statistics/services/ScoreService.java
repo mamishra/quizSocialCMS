@@ -11,4 +11,6 @@ public interface ScoreService {
 
     List<Score> saveScore(State state);
     List<Score> fetchScore(State state);
+    List<Score> scoreByContestId(String contestId);
+    List<Score> getScoreByUserId(String userId);
 }

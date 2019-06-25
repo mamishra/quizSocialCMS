@@ -1,11 +1,9 @@
 package com.coviam.quizMedia.Statistics.services;
 
-import com.coviam.quizMedia.Statistics.dto.ScoreDto;
 import com.coviam.quizMedia.Statistics.entity.Question;
 import com.coviam.quizMedia.Statistics.entity.Score;
 import com.coviam.quizMedia.Statistics.entity.State;
 import com.coviam.quizMedia.Statistics.repository.ScoreRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ScoreServiceImpl implements ScoreService {
@@ -31,6 +26,11 @@ public class ScoreServiceImpl implements ScoreService {
     @Autowired
     ScoreRepository scoreRepository;
 
+    @Override
+    public List<Score> getScoreByUserId(String userId) {
+        return scoreRepository.getScoreByUserId(userId);
+    }
+
     @Autowired
     RestTemplate restTemplate;
 
@@ -39,6 +39,11 @@ public class ScoreServiceImpl implements ScoreService {
         List<Score> scoreList = scoreRepository.getScoreByContestId(state.getContestId());
 
         return scoreList;
+    }
+
+    @Override
+    public List<Score> scoreByContestId(String contestId) {
+        return scoreRepository.getScoreByContestId(contestId);
     }
 
     @Override

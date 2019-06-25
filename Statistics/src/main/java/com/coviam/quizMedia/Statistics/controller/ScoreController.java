@@ -50,4 +50,30 @@ public class ScoreController {
         return new ResponseEntity<ScoreDto>(scoreDto,HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getScore/{contestId}")
+    public ResponseEntity<?> getScoreByContestId(@PathVariable("contestId") String contestId){
+
+        List<Score> scoreList = scoreService.scoreByContestId(contestId);
+        List<ScoreDto> scoreDtoList = new ArrayList<>();
+        scoreList.forEach((score)->{
+                ScoreDto scoreDto = new ScoreDto();
+                BeanUtils.copyProperties(score,scoreDto);
+                scoreDtoList.add(scoreDto);
+            });
+        return new ResponseEntity<List<ScoreDto>>(scoreDtoList,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getScoreByUserIdContestId")
+    public ResponseEntity<?> getScoreByContestIdUserId(@RequestParam(name = "userId") String userId, @RequestParam(name = "contestId") String contestId){
+
+        List<Score> scoreList = scoreService.scoreByContestId(contestId);
+        ScoreDto scoreDto = new ScoreDto();
+        scoreList.forEach((score)->{
+            if (score.getUserId().equals(userId)) {
+                BeanUtils.copyProperties(score, scoreDto);
+            }
+        });
+        return new ResponseEntity<ScoreDto>(scoreDto,HttpStatus.OK);
+    }
+
 }
