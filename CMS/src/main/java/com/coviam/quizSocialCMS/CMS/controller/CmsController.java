@@ -7,9 +7,11 @@ import com.coviam.quizSocialCMS.CMS.entityDto.RandomQuizDto;
 import com.coviam.quizSocialCMS.CMS.entityDto.StaticContestDto;
 import com.coviam.quizSocialCMS.CMS.repository.StaticContestRepository;
 import com.coviam.quizSocialCMS.CMS.service.impl.StaticContestService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,29 +64,20 @@ public class CmsController {
 
         }
     }
-    //todo change return type dont send question and send times
-
-    List<StaticContestEntityClass> list1;
 
 
     @RequestMapping(method = RequestMethod.GET,value = "/getActiveContests/{page}")
     public ResponseEntity<List<ActiveContestDto>> getActiveContest(@PathVariable("page") int pageOfSet)
     {
-        List<ActiveContestDto> list=new ArrayList<>();
-        if(pageOfSet==0)
+        List<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getActiveContest() ;
+        List<ActiveContestDto> activeContestDtos=new ArrayList<>();
+        for(StaticContestEntityClass staticContestEntityClass:staticContestEntityClasses)
         {
-            list1=staticContestService.getActiveContest();
-        }
-        int startPoint=10*pageOfSet;
-        for(int i=startPoint;i<startPoint+10;i++)
-        {
-            if(i>=list1.size())
-                break;
             ActiveContestDto activeContestDto=new ActiveContestDto();
-            BeanUtils.copyProperties(list1.get(i),activeContestDto);
-            list.add(activeContestDto);
+            BeanUtils.copyProperties(staticContestEntityClass,activeContestDto);
+            activeContestDtos.add(activeContestDto);
         }
-        return new ResponseEntity<List<ActiveContestDto>>(list,HttpStatus.OK);
+        return new ResponseEntity<List<ActiveContestDto>>(activeContestDtos,HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/getRandomQuestion")
@@ -101,11 +94,37 @@ public class CmsController {
         return new ResponseEntity<RandomQuizDto>(randomQuizDto,HttpStatus.OK);
     }
 
-    /*
-    todo
-    get contest bvy name
+    @RequestMapping(method = RequestMethod.GET,value = "/getContestByCategory/{category}/{page}")
+    public ResponseEntity<List<ActiveContestDto>> getContestByCategory(@PathVariable("category") String category,@PathVariable("page")int page)
+    {
+        Page<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getContestByCategory(category,page) ;
+        List<StaticContestEntityClass> list=Lists.newArrayList(staticContestEntityClasses);
+        List<ActiveContestDto> finalList=new ArrayList<>();
+        for(StaticContestEntityClass staticContestEntityClass:list)
+        {
+            ActiveContestDto activeContestDto=new ActiveContestDto();
+            BeanUtils.copyProperties(staticContestEntityClass,activeContestDto);
+            finalList.add(activeContestDto);
+        }
+        return new ResponseEntity<List<ActiveContestDto>>(finalList,HttpStatus.OK);
+    }
 
-    */
+
+    @RequestMapping(method = RequestMethod.GET,value = "/getContestByContestName/{name}/{page}")
+    public ResponseEntity<List<ActiveContestDto>> getContestByContestName(@PathVariable("name") String name,@PathVariable("page")int page)
+    {
+        Page<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getContestByContestName(name,page) ;
+        List<StaticContestEntityClass> list=Lists.newArrayList(staticContestEntityClasses);
+        List<ActiveContestDto> finalList=new ArrayList<>();
+        for(StaticContestEntityClass staticContestEntityClass:list)
+        {
+            ActiveContestDto activeContestDto=new ActiveContestDto();
+            BeanUtils.copyProperties(staticContestEntityClass,activeContestDto);
+            finalList.add(activeContestDto);
+        }
+        return new ResponseEntity<List<ActiveContestDto>>(finalList,HttpStatus.OK);
+    }
+
 
 
     private class ContestEndTaskScheduler extends TimerTask{

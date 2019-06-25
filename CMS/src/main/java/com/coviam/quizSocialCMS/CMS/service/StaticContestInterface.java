@@ -12,6 +12,8 @@ public interface StaticContestInterface {
     public StaticContestEntityClass getContestById(String id);
     public void deleteContestById(String id);
     public List<StaticContestEntityClass> getActiveContest();
+    public Page<StaticContestEntityClass> getContestByCategory(String category,int page);
+    public Page<StaticContestEntityClass> getContestByContestName(String name,int page);
 
 
 }
