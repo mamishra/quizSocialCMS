@@ -14,6 +14,6 @@ public interface StaticContestInterface {
     public List<StaticContestEntityClass> getActiveContest();
     public Page<StaticContestEntityClass> getContestByCategory(String category,int page);
     public Page<StaticContestEntityClass> getContestByContestName(String name,int page);
-
+    public List<StaticContestEntityClass> findAll();
 
 }

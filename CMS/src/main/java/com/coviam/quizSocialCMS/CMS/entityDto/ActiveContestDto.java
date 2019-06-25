@@ -10,6 +10,15 @@ public class ActiveContestDto {
     Date endTime;
     Date durationOfContest;
     String category;
+    boolean dynamicContest;
+
+    public boolean isDynamicContest() {
+        return dynamicContest;
+    }
+
+    public void setDynamicContest(boolean dynamicContest) {
+        this.dynamicContest = dynamicContest;
+    }
 
     public String getContestId() {
         return contestId;

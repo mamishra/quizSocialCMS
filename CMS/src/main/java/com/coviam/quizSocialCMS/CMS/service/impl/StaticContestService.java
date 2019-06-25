@@ -50,5 +50,10 @@ public class StaticContestService implements StaticContestInterface {
         return staticContestRepository.findByContestName(name,new PageRequest(page,5));
     }
 
+    @Override
+    public List<StaticContestEntityClass> findAll() {
+        return staticContestRepository.findAll();
+    }
+
 
 }

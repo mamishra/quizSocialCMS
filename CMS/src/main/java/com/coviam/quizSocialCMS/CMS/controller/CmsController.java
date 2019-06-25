@@ -1,21 +1,19 @@
 package com.coviam.quizSocialCMS.CMS.controller;
 
-import com.coviam.quizSocialCMS.CMS.entity.ScreenedDataEntityClass;
 import com.coviam.quizSocialCMS.CMS.entity.StaticContestEntityClass;
 import com.coviam.quizSocialCMS.CMS.entityDto.ActiveContestDto;
 import com.coviam.quizSocialCMS.CMS.entityDto.RandomQuizDto;
 import com.coviam.quizSocialCMS.CMS.entityDto.StaticContestDto;
-import com.coviam.quizSocialCMS.CMS.repository.StaticContestRepository;
-import com.coviam.quizSocialCMS.CMS.service.impl.StaticContestService;
+import com.coviam.quizSocialCMS.CMS.service.StaticContestInterface;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @RestController
@@ -24,7 +22,19 @@ import java.util.*;
 public class CmsController {
 
     @Autowired
-    StaticContestService staticContestService;
+    StaticContestInterface staticContestInterface;
+
+    @PostConstruct
+    public void initiator(){
+        List<StaticContestEntityClass> staticContestEntityClasses= staticContestInterface.findAll();
+        for(StaticContestEntityClass staticContestEntityClass:staticContestEntityClasses)
+        {
+            Date endTimeOfContest=new Date(staticContestEntityClass.getEndTime().getTime()+staticContestEntityClass.getDurationOfContest().getTime());
+            Timer timer=new Timer();
+            ContestEndTaskScheduler scheduler=new ContestEndTaskScheduler(endTimeOfContest,staticContestEntityClass.getContestId(),timer);
+            timer.schedule(scheduler,0,6000);
+        }
+    }
 
     @RequestMapping(method = RequestMethod.POST,value = "/saveContest")
     public ResponseEntity<?> saveContest(@RequestBody StaticContestDto staticContestDto)
@@ -32,7 +42,7 @@ public class CmsController {
         StaticContestEntityClass staticContestEntityClass=new StaticContestEntityClass();
         BeanUtils.copyProperties(staticContestDto,staticContestEntityClass);
         try {
-            staticContestService.saveContest(staticContestEntityClass);
+            staticContestInterface.saveContest(staticContestEntityClass);
             Date endTimeOfContest=new Date(staticContestEntityClass.getEndTime().getTime()+staticContestEntityClass.getDurationOfContest().getTime());
             Timer timer=new Timer();
             ContestEndTaskScheduler scheduler=new ContestEndTaskScheduler(endTimeOfContest,staticContestEntityClass.getContestId(),timer);
@@ -52,7 +62,7 @@ public class CmsController {
     public ResponseEntity<?> getContestById(@PathVariable("id") String id)
     {
         try{
-            StaticContestEntityClass staticContestEntityClass=staticContestService.getContestById(id);
+            StaticContestEntityClass staticContestEntityClass= staticContestInterface.getContestById(id);
             if(staticContestEntityClass==null)
             {
                 return new ResponseEntity<String>("{\"err\":\"contest ended\"}", HttpStatus.OK);
@@ -69,7 +79,7 @@ public class CmsController {
     @RequestMapping(method = RequestMethod.GET,value = "/getActiveContests/{page}")
     public ResponseEntity<List<ActiveContestDto>> getActiveContest(@PathVariable("page") int pageOfSet)
     {
-        List<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getActiveContest() ;
+        List<StaticContestEntityClass> staticContestEntityClasses= staticContestInterface.getActiveContest() ;
         List<ActiveContestDto> activeContestDtos=new ArrayList<>();
         for(StaticContestEntityClass staticContestEntityClass:staticContestEntityClasses)
         {
@@ -83,21 +93,40 @@ public class CmsController {
     @RequestMapping(method = RequestMethod.GET,value = "/getRandomQuestion")
     public ResponseEntity<RandomQuizDto> getRandomQuestion()
     {
-        List<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getActiveContest();
-        Random random=new Random();
-        int i=random.nextInt(staticContestEntityClasses.size()-1);
-        StaticContestEntityClass staticContestEntityClass=staticContestEntityClasses.get(i);
-        i=random.nextInt()%(staticContestEntityClass.getQuestionId().size());
         RandomQuizDto randomQuizDto=new RandomQuizDto();
+        try{
+        List<StaticContestEntityClass> staticContestEntityClasses= staticContestInterface.getActiveContest();
+        if(staticContestEntityClasses.size()==0){
+            return new ResponseEntity<>(randomQuizDto,HttpStatus.OK);
+        }
+        Random random=new Random();
+        int maxLoop=10,i;
+        StaticContestEntityClass staticContestEntityClass=new StaticContestEntityClass();
+        while(maxLoop-->0){
+            i=random.nextInt(staticContestEntityClasses.size()-1);
+            staticContestEntityClass=staticContestEntityClasses.get(i);
+            if(staticContestEntityClass.getStartTime().before(new Date()))
+            {
+                break;
+            }
+        }
+        i=random.nextInt()%(staticContestEntityClass.getQuestionId().size());
         BeanUtils.copyProperties(staticContestEntityClass,randomQuizDto);
         randomQuizDto.setQuestionId(staticContestEntityClass.getQuestionId().get(i));
         return new ResponseEntity<RandomQuizDto>(randomQuizDto,HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<RandomQuizDto>(randomQuizDto,HttpStatus.OK);
+
+        }
+
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/getContestByCategory/{category}/{page}")
     public ResponseEntity<List<ActiveContestDto>> getContestByCategory(@PathVariable("category") String category,@PathVariable("page")int page)
     {
-        Page<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getContestByCategory(category,page) ;
+        Page<StaticContestEntityClass> staticContestEntityClasses= staticContestInterface.getContestByCategory(category,page) ;
         List<StaticContestEntityClass> list=Lists.newArrayList(staticContestEntityClasses);
         List<ActiveContestDto> finalList=new ArrayList<>();
         for(StaticContestEntityClass staticContestEntityClass:list)
@@ -113,7 +142,7 @@ public class CmsController {
     @RequestMapping(method = RequestMethod.GET,value = "/getContestByContestName/{name}/{page}")
     public ResponseEntity<List<ActiveContestDto>> getContestByContestName(@PathVariable("name") String name,@PathVariable("page")int page)
     {
-        Page<StaticContestEntityClass> staticContestEntityClasses=staticContestService.getContestByContestName(name,page) ;
+        Page<StaticContestEntityClass> staticContestEntityClasses= staticContestInterface.getContestByContestName(name,page) ;
         List<StaticContestEntityClass> list=Lists.newArrayList(staticContestEntityClasses);
         List<ActiveContestDto> finalList=new ArrayList<>();
         for(StaticContestEntityClass staticContestEntityClass:list)
@@ -142,11 +171,11 @@ public class CmsController {
         @Override
         public void run() {
             Date nowTime=new Date();
-            System.out.println("hey");
+            System.out.println("looping for "+contestId);
 
             if(endTimeOfContest.before(nowTime))
             {
-                staticContestService.deleteContestById(contestId);
+                staticContestInterface.deleteContestById(contestId);
                 t.cancel();
             }
         }
