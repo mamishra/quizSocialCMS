@@ -67,7 +67,7 @@ public class LeaderBoardServiceImpl implements LeaderBoardService {
     public List<String> getUserNameList(List<String> userIds) {
         String url = "http://172.16.26.53:8081/getOnlyNames";
         restTemplate=new RestTemplate();
-        ResponseEntity<ArrayList> listResponseEntity=restTemplate.postForEntity(url, (Object) userIds,ArrayList.class);
+        ResponseEntity<ArrayList> listResponseEntity=restTemplate.postForEntity(url, (Object) userIds, ArrayList.class);
         ArrayList<String> list=listResponseEntity.getBody();
         return list;
     }
