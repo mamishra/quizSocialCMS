@@ -1,5 +1,6 @@
 package com.coviam.quizSocialCMS.CMS.controller;
 
+import com.coviam.quizSocialCMS.CMS.entity.ScreenedDataEntityClass;
 import com.coviam.quizSocialCMS.CMS.entity.StaticContestEntityClass;
 import com.coviam.quizSocialCMS.CMS.entityDto.ActiveContestDto;
 import com.coviam.quizSocialCMS.CMS.entityDto.RandomQuizDto;
@@ -157,7 +158,7 @@ public class CmsController {
     @RequestMapping(method = RequestMethod.GET,value = "/getContestQuestions/{contestId}")
     public ResponseEntity<List<ScreenedDataEntityClass>> getContestQuestion(@PathVariable("contestId")String contestId)
     {
-        List<ScreenedDataEntityClass> list=staticContestService.getContestById(contestId).getQuestionId();
+        List<ScreenedDataEntityClass> list=staticContestInterface.getContestById(contestId).getQuestionId();
         return new ResponseEntity<List<ScreenedDataEntityClass>>(list,HttpStatus.OK);
     }
 
