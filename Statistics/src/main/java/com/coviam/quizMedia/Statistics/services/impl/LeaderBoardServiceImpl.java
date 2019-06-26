@@ -1,7 +1,8 @@
-package com.coviam.quizMedia.Statistics.services;
+package com.coviam.quizMedia.Statistics.services.impl;
 
 import com.coviam.quizMedia.Statistics.entity.Score;
 import com.coviam.quizMedia.Statistics.repository.ScoreRepository;
+import com.coviam.quizMedia.Statistics.services.LeaderBoardService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
