@@ -25,7 +25,7 @@ public class LeaderBoardController {
     @Autowired
     ScoreService scoreService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getScore/{contestId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/getLeaderBoard/{contestId}")
     public ResponseEntity<?> getScoreByContestId(@PathVariable("contestId") String contestId){
 
         List<Score> scoreList = leaderBoardService.getGlobalLeaderBoardPerContest(contestId);
@@ -64,7 +64,7 @@ public class LeaderBoardController {
         return new ResponseEntity<List<LeaderBoardDto>>(resultList,HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getAllScore")
+    @RequestMapping(method = RequestMethod.GET, value = "/getGlobalLeaderBoard")
     public ResponseEntity<?> getAllScores(){
 
         String[] userIds = leaderBoardService.getAllUserId();
