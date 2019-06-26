@@ -35,16 +35,12 @@ public class LeaderBoardController {
             BeanUtils.copyProperties(score,scoreDto);
             scoreDtoList.add(scoreDto);
         });
-        String[] userIds = new String[scoreList.size()];
-        for (int i = 0; i < scoreList.size(); i++){
-
-            userIds[i] = scoreList.get(i).getUserId();
-        }
-        String[] userNames = leaderBoardService.getUserNameArray(userIds);
+        List<String> userIdList = leaderBoardService.getAllUserId();
+        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIds.length; i++){
+        for (int i = 0; i < userIdList.size(); i++){
 
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIds[i],userNames[i],scoreList.get(i).getPoints());
+            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),scoreList.get(i).getPoints());
             leaderBoardDtoList.add(leaderBoardDto);
         }
         for (int i = 0; i < leaderBoardDtoList.size(); i++){
@@ -58,7 +54,7 @@ public class LeaderBoardController {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < userIdList.size(); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         return new ResponseEntity<List<LeaderBoardDto>>(resultList,HttpStatus.OK);
@@ -67,16 +63,16 @@ public class LeaderBoardController {
     @RequestMapping(method = RequestMethod.GET, value = "/getGlobalLeaderBoard")
     public ResponseEntity<?> getAllScores(){
 
-        String[] userIds = leaderBoardService.getAllUserId();
-        String[] userNameList = leaderBoardService.getUserNameArray(userIds);
+        List<String> userIdList = leaderBoardService.getAllUserId();
+        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIds.length; i++){
-            List<Score> scoreList = scoreService.getScoreByUserId(userIds[i]);
+        for (int i = 0; i < userIdList.size(); i++){
+            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
             int points = 0;
             for (Score score : scoreList){
                 points+=score.getPoints();
             }
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIds[i],userNameList[i],points);
+            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
             leaderBoardDtoList.add(leaderBoardDto);
         }
 
@@ -100,11 +96,11 @@ public class LeaderBoardController {
     @RequestMapping(method = RequestMethod.GET, value = "/getWeeklyLeaderBoard")
     public ResponseEntity<?> getAllScoresWeekly(){
 
-        String[] userIds = leaderBoardService.getAllUserId();
-        String[] userNameList = leaderBoardService.getUserNameArray(userIds);
+        List<String> userIdList = leaderBoardService.getAllUserId();
+        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIds.length; i++){
-            List<Score> scoreList = scoreService.getScoreByUserId(userIds[i]);
+        for (int i = 0; i < userIdList.size(); i++){
+            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
             List<Score> filterScoreList = new ArrayList<>();
             LocalDate today = LocalDate.now();
             // Go backward to get Monday
@@ -134,7 +130,7 @@ public class LeaderBoardController {
             for (Score score : filterScoreList){
                 points+=score.getPoints();
             }
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIds[i],userNameList[i],points);
+            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
             leaderBoardDtoList.add(leaderBoardDto);
         }
 
@@ -158,11 +154,11 @@ public class LeaderBoardController {
     @RequestMapping(method = RequestMethod.GET, value = "/getDailyLeaderBoard")
     public ResponseEntity<?> getAllScoresDaily(){
 
-        String[] userIds = leaderBoardService.getAllUserId();
-        String[] userNameList = leaderBoardService.getUserNameArray(userIds);
+        List<String> userIdList = leaderBoardService.getAllUserId();
+        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIds.length; i++){
-            List<Score> scoreList = scoreService.getScoreByUserId(userIds[i]);
+        for (int i = 0; i < userIdList.size(); i++){
+            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
             List<Score> filterScoreList = new ArrayList<>();
             LocalDate today = LocalDate.now();
 
@@ -180,7 +176,7 @@ public class LeaderBoardController {
             for (Score score : filterScoreList){
                 points+=score.getPoints();
             }
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIds[i],userNameList[i],points);
+            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
             leaderBoardDtoList.add(leaderBoardDto);
         }
 
