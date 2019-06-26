@@ -28,13 +28,23 @@ public class CmsController {
     @PostConstruct
     public void initiator(){
         List<StaticContestEntityClass> staticContestEntityClasses= staticContestInterface.findAll();
-        for(StaticContestEntityClass staticContestEntityClass:staticContestEntityClasses)
-        {
-            Date endTimeOfContest=new Date(staticContestEntityClass.getEndTime().getTime()+staticContestEntityClass.getDurationOfContest().getTime());
-            Timer timer=new Timer();
-            ContestEndTaskScheduler scheduler=new ContestEndTaskScheduler(endTimeOfContest,staticContestEntityClass.getContestId(),timer);
-            timer.schedule(scheduler,0,6000);
+        try {
+
+
+            if (staticContestEntityClasses != null) {
+                for (StaticContestEntityClass staticContestEntityClass : staticContestEntityClasses) {
+                    Date endTimeOfContest = new Date(staticContestEntityClass.getEndTime().getTime() + staticContestEntityClass.getDurationOfContest().getTime());
+                    Timer timer = new Timer();
+                    ContestEndTaskScheduler scheduler = new ContestEndTaskScheduler(endTimeOfContest, staticContestEntityClass.getContestId(), timer);
+                    timer.schedule(scheduler, 0, 6000);
+                }
+            }
         }
+        catch (Exception e)
+        {
+
+        }
+
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/saveContest")
@@ -169,22 +179,51 @@ public class CmsController {
         Date endTimeOfContest;
         String contestId;
         Timer t;
+        boolean isActive;
+        Date startTimeOfContest;
 
         public ContestEndTaskScheduler(Date endTimeOfContest, String contestId,Timer t) {
             this.endTimeOfContest = endTimeOfContest;
             this.contestId = contestId;
             this.t=t;
+            startTimeOfContest=staticContestInterface.getContestById(contestId).getStartTime();
+            Date nowTime=new Date();
+            if(startTimeOfContest.before(nowTime)){
+                StaticContestEntityClass staticContestEntityClass = staticContestInterface.getContestById(contestId);
+                staticContestEntityClass.setActive(true);
+                isActive=true;
+                staticContestInterface.saveContest(staticContestEntityClass);
+
+            }
+            else{
+                StaticContestEntityClass staticContestEntityClass = staticContestInterface.getContestById(contestId);
+                staticContestEntityClass.setActive(false);
+                isActive = false;
+                staticContestInterface.saveContest(staticContestEntityClass);
+            }
         }
 
         @Override
         public void run() {
             Date nowTime=new Date();
-            System.out.println("looping for "+contestId);
-
-            if(endTimeOfContest.before(nowTime))
-            {
-                staticContestInterface.deleteContestById(contestId);
-                t.cancel();
+            //System.out.println("looping for "+contestId);
+           // t.cancel();
+            if(isActive==true) {
+                if (endTimeOfContest.before(nowTime)) {
+                    StaticContestEntityClass staticContestEntityClass = staticContestInterface.getContestById(contestId);
+                    staticContestEntityClass.setActive(false);
+                    isActive = false;
+                    staticContestInterface.saveContest(staticContestEntityClass);
+                    t.cancel();
+                }
+            }
+            else{
+                if(startTimeOfContest.before(nowTime)){
+                    StaticContestEntityClass staticContestEntityClass = staticContestInterface.getContestById(contestId);
+                    staticContestEntityClass.setActive(true);
+                    isActive = true;
+                    staticContestInterface.saveContest(staticContestEntityClass);
+                }
             }
         }
     }

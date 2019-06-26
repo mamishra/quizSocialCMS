@@ -17,4 +17,6 @@ public interface StaticContestRepository extends MongoRepository<StaticContestEn
     public Page<StaticContestEntityClass> findByCategory(String name,Pageable pageable);
     public Page<StaticContestEntityClass> findByContestName(String name,Pageable pageable);
 
+
+
 }
