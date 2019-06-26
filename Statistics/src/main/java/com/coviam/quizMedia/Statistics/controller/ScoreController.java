@@ -4,6 +4,7 @@ import com.coviam.quizMedia.Statistics.dto.ScoreDto;
 import com.coviam.quizMedia.Statistics.entity.Score;
 import com.coviam.quizMedia.Statistics.entity.State;
 import com.coviam.quizMedia.Statistics.services.ScoreService;
+import com.coviam.quizMedia.Statistics.services.impl.ScoreServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ public class ScoreController {
 
     @Autowired
     ScoreService scoreService;
+    @Autowired
+    ScoreServiceImpl scoreServiceImpl;
 
     @RequestMapping(method = RequestMethod.POST, value = "/saveScore")
     public ResponseEntity<?> saveScore(@RequestBody State state){
@@ -30,6 +33,10 @@ public class ScoreController {
             ScoreDto scoreDto = new ScoreDto();
             BeanUtils.copyProperties(sta,scoreDto);
             scoreDtos.add(scoreDto);
+            scoreServiceImpl.calculateGlobalLeaderBoard("1","Global");
+            scoreServiceImpl.calculateWeeklyLeaderBoard("2","Weekly");
+            scoreServiceImpl.calculateDailyLeaderBoard("3","Daily");
+            scoreServiceImpl.calculateLeaderBoardPerContest(state.getContestId(),state.getContestName());
         });
 
         return new ResponseEntity<List<ScoreDto>>( scoreDtos, HttpStatus.OK);
