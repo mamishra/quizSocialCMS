@@ -107,8 +107,8 @@ public class LeaderBoardController {
             List<Score> scoreList = scoreService.getScoreByUserId(userIds[i]);
             List<Score> filterScoreList = new ArrayList<>();
             LocalDate today = LocalDate.now();
-            LocalDate monday = today;
             // Go backward to get Monday
+            LocalDate monday = today;
             while (monday.getDayOfWeek() != DayOfWeek.MONDAY) {
                 monday = monday.minusDays(1);
             }
@@ -128,6 +128,52 @@ public class LeaderBoardController {
                     filterScoreList.add(score);
                 }
 
+            }
+
+            int points = 0;
+            for (Score score : filterScoreList){
+                points+=score.getPoints();
+            }
+            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIds[i],userNameList[i],points);
+            leaderBoardDtoList.add(leaderBoardDto);
+        }
+
+        for (int i = 0; i < leaderBoardDtoList.size(); i++){
+            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
+                if (leaderBoardDtoList.get(i).getScore()>leaderBoardDtoList.get(j).getScore()){
+                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
+                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
+                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
+                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
+                }
+            }
+        }
+        List<LeaderBoardDto> resultList = new ArrayList<>();
+        for (int i = 0; i < 10; i++){
+            resultList.add(leaderBoardDtoList.get(i));
+        }
+        return new ResponseEntity<List<LeaderBoardDto>>(resultList,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getDailyLeaderBoard")
+    public ResponseEntity<?> getAllScoresDaily(){
+
+        String[] userIds = leaderBoardService.getAllUserId();
+        String[] userNameList = leaderBoardService.getUserNameArray(userIds);
+        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
+        for (int i = 0; i < userIds.length; i++){
+            List<Score> scoreList = scoreService.getScoreByUserId(userIds[i]);
+            List<Score> filterScoreList = new ArrayList<>();
+            LocalDate today = LocalDate.now();
+
+            for (Score score : scoreList){
+                Date timestamp = score.getTimeStamp();
+                Instant instant = Instant.ofEpochMilli(timestamp.getTime());
+                LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                LocalDate submissionTime = localDateTime.toLocalDate();
+                if (submissionTime.equals(today)){
+                    filterScoreList.add(score);
+                }
             }
 
             int points = 0;
