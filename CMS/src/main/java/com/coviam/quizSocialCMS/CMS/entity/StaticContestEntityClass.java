@@ -22,7 +22,25 @@ public class StaticContestEntityClass {
     Date endTime;
     Date durationOfContest;
     String category;
+    Date interval;
     boolean dynamicContest;
+    boolean isActive;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Date getInterval() {
+        return interval;
+    }
+
+    public void setInterval(Date interval) {
+        this.interval = interval;
+    }
 
     public boolean isDynamicContest() {
         return dynamicContest;

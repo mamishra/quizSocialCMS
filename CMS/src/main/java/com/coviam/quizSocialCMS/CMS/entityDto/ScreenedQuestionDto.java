@@ -8,7 +8,7 @@ public class ScreenedQuestionDto {
     String questionType;
     String rightAnswers;
     String difficultyLevel;
-    String url;
+    String resourceUrl;
     String category;
 
     public String getCategory() {
@@ -76,11 +76,11 @@ public class ScreenedQuestionDto {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public String getUrl() {
-        return url;
+    public String getResourceUrl() {
+        return resourceUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setResourceUrl(String resourceUrl) {
+        this.resourceUrl = resourceUrl;
     }
 }
