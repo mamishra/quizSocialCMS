@@ -50,6 +50,8 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setQuestionType(array[9]);
                 question.setBinaryPath(array[10]);
                 question.setCategory(array[11]);
+                question.setIsScreened(array[12]);
+                question.setIsRejected(array[13]);
 
                 questionList.add(question);
 

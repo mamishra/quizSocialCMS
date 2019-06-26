@@ -19,6 +19,8 @@ public class Question {
     private String questionType;
     private String binaryPath;
     private String category;
+    private String isScreened;
+    private String isRejected;
 
     public Question() {
     }
@@ -36,6 +38,23 @@ public class Question {
         this.questionType = questionType;
         this.binaryPath = binaryPath;
         this.category = category;
+    }
+
+    public Question(String queNo, String question, String option1, String option2, String option3, String option4, String rightAnswer, String answerType, String difficultyLevel, String questionType, String binaryPath, String category, String isScreened, String isRejected) {
+        this.queNo = queNo;
+        this.question = question;
+        this.option1 = option1;
+        this.option2 = option2;
+        this.option3 = option3;
+        this.option4 = option4;
+        this.rightAnswer = rightAnswer;
+        this.answerType = answerType;
+        this.difficultyLevel = difficultyLevel;
+        this.questionType = questionType;
+        this.binaryPath = binaryPath;
+        this.category = category;
+        this.isScreened = isScreened;
+        this.isRejected = isRejected;
     }
 
     public String getQueNo() {
@@ -134,10 +153,26 @@ public class Question {
         this.category = category;
     }
 
+    public String getIsScreened() {
+        return isScreened;
+    }
+
+    public void setIsScreened(String isScreened) {
+        this.isScreened = isScreened;
+    }
+
+    public String getIsRejected() {
+        return isRejected;
+    }
+
+    public void setIsRejected(String isRejected) {
+        this.isRejected = isRejected;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
-                "queNo=" + queNo +
+                "queNo='" + queNo + '\'' +
                 ", question='" + question + '\'' +
                 ", option1='" + option1 + '\'' +
                 ", option2='" + option2 + '\'' +
@@ -149,6 +184,8 @@ public class Question {
                 ", questionType='" + questionType + '\'' +
                 ", binaryPath='" + binaryPath + '\'' +
                 ", category='" + category + '\'' +
+                ", isScreened='" + isScreened + '\'' +
+                ", isRejected='" + isRejected + '\'' +
                 '}';
     }
 }

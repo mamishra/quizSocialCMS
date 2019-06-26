@@ -1,6 +1,5 @@
 package com.coviam.quizMedia.Statistics.repository;
 
-import com.coviam.quizMedia.Statistics.entity.Question;
 import com.coviam.quizMedia.Statistics.entity.Score;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
