@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,8 @@ public class ScreenerController {
     @RequestMapping(method = RequestMethod.POST,value = "/saveScreenedQuestion")
     public ResponseEntity<?> saveScreenedQuestion(@RequestBody List<ScreenedQuestionDto> screenedQuestionDto1)
     {
+        System.out.println("Save screened question called"+new Date());
+
         for(ScreenedQuestionDto screenedQuestionDto : screenedQuestionDto1) {
             ScreenedDataEntityClass screenedDataEntityClass = new ScreenedDataEntityClass();
             BeanUtils.copyProperties(screenedQuestionDto, screenedDataEntityClass);
@@ -41,6 +44,8 @@ public class ScreenerController {
     @RequestMapping(method = RequestMethod.GET,value = "/getScreenedQuestionsByCategory/{category}")
     public ResponseEntity<?> getScreenedQuestion(@PathVariable("category") String category)
     {
+        System.out.println("Get screened question by  called"+new Date());
+
         return new ResponseEntity<>(screenedDataService.getScreenedQuestionsByCategory(category),HttpStatus.OK);
     }
 

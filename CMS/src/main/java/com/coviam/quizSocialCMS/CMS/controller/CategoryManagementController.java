@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,7 @@ public class CategoryManagementController {
     @RequestMapping(method = RequestMethod.POST,value = "/saveCategory")
     public ResponseEntity<String> saveCategory(@RequestBody CategoryEntityClass categoryEntityClass)
     {
+        System.out.println("Save Category Called "+new Date());
         try {
             categoryCollectionRepository.save(categoryEntityClass);
             return new ResponseEntity<>("{\"msg\":\"saved\"}", HttpStatus.OK);
@@ -35,6 +37,8 @@ public class CategoryManagementController {
     @RequestMapping(method = RequestMethod.GET,value = "/getCategories")
     public ResponseEntity<List<CategoryEntityClass>> getCategories()
     {
+        System.out.println("Get Category Called "+new Date());
+
         List<CategoryEntityClass> categoryEntityClasses=new ArrayList<>();
         try
         {
