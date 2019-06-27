@@ -36,7 +36,13 @@ public class StateServiceImpl implements StateService {
         }
         List<State> list = new ArrayList<>();
         list.add(state);
-        stateRepository.delete(state1.getStateId());
+        try{
+            stateRepository.delete(state1.getStateId());
+        }
+        catch (Exception e)
+        {
+
+        }
         return stateRepository.save(list);
 
     }

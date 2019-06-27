@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +29,37 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> getQuestionListFromFile(String fileName) {
 
-        String csvFile = fileName;
+
+        String urlString = "https://drive.google.com/uc?export=view&id="+fileName;
+
+        // create the url
+        URL url = null;
+        try {
+            url = new URL(urlString);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        // open the url stream, wrap it in a few "readers"
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         String line = "";
         String cvsSplitBy = ",";
         List<Question> questionList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            while (!(line = br.readLine()).equals("END")) {
+        try  {
+            while (!(line = reader.readLine()).equals("END")) {
 
                 // use comma as separator
 
                 String[] array = line.split(cvsSplitBy);
                 Question question = new Question();
 
-                question.setQueNo(array[0]);
+                //question.setQueNo(array[0]);
                 question.setQuestion(array[1]);
                 question.setOption1(array[2]);
                 question.setOption2(array[3]);
@@ -56,6 +77,12 @@ public class QuestionServiceImpl implements QuestionService {
                 questionList.add(question);
 
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
