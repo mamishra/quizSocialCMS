@@ -36,6 +36,22 @@ public class StateController {
 
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/updateState")
+    public ResponseEntity<?> updateState(@RequestBody State state){
+
+        List<State> list = stateService.updateState(state);
+        List<StateDto> stateDtos = new ArrayList<>();
+        list.forEach((sta)->{
+            StateDto stateDto = new StateDto();
+            BeanUtils.copyProperties(sta,stateDto);
+            stateDtos.add(stateDto);
+        });
+
+        return new ResponseEntity<List<StateDto>>( stateDtos, HttpStatus.OK);
+
+    }
+
+
     @RequestMapping(method = RequestMethod.GET, value = "/getState")
     public ResponseEntity<?> getquestionByCategory(@RequestParam(name = "userId") String userId, @RequestParam(name = "contestId") String contestId){
 

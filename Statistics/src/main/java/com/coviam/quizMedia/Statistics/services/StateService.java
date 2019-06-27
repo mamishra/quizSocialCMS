@@ -8,4 +8,5 @@ public interface StateService {
 
     List<State> saveState(State state);
     State fetchState(String userId, String contestId);
+    List<State> updateState(State state);
 }
