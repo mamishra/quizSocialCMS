@@ -3,15 +3,11 @@ package com.coviam.quizSocialCMS.CMS.service.impl;
 import com.coviam.quizSocialCMS.CMS.entity.StaticContestEntityClass;
 import com.coviam.quizSocialCMS.CMS.repository.StaticContestRepository;
 import com.coviam.quizSocialCMS.CMS.service.StaticContestInterface;
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.naming.ldap.PagedResultsControl;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
