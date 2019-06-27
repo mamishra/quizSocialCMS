@@ -41,22 +41,43 @@ public class LeaderBoardController {
     @RequestMapping(method = RequestMethod.GET, value = "/getGlobalLeaderBoard")
     public ResponseEntity<?> getAllScores(){
 
-        LeaderBoardEntity leaderBoardDtos=leaderBoardDbService.find("1");
-        return new ResponseEntity<>(leaderBoardDtos,HttpStatus.OK);
+        try {
+            LeaderBoardEntity leaderBoardDtos = leaderBoardDbService.find("1");
+            return new ResponseEntity<>(leaderBoardDtos, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
+
+        }
 
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getWeeklyLeaderBoard")
     public ResponseEntity<?> getAllScoresWeekly(){
 
-        LeaderBoardEntity leaderBoardEntity=leaderBoardDbService.find("2");
-        return new ResponseEntity<LeaderBoardEntity>(leaderBoardEntity,HttpStatus.OK);
+        try {
+            LeaderBoardEntity leaderBoardEntity = leaderBoardDbService.find("2");
+            return new ResponseEntity<LeaderBoardEntity>(leaderBoardEntity, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
+
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getDailyLeaderBoard")
     public ResponseEntity<?> getAllScoresDaily(){
-        LeaderBoardEntity leaderBoardEntity=leaderBoardDbService.find("3");
-        return new ResponseEntity<LeaderBoardEntity>(leaderBoardEntity,HttpStatus.OK);
+        try {
+            LeaderBoardEntity leaderBoardEntity = leaderBoardDbService.find("3");
+            return new ResponseEntity<LeaderBoardEntity>(leaderBoardEntity, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
+
+        }
 
     }
 }

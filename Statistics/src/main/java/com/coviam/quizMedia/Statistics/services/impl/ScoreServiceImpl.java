@@ -129,7 +129,7 @@ public class ScoreServiceImpl implements ScoreService {
 
         for (int i = 0; i < leaderBoardDtoList.size(); i++){
             for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()>leaderBoardDtoList.get(j).getScore()){
+                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
                     LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
                     BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
                     BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
@@ -138,7 +138,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();
@@ -190,7 +190,7 @@ public class ScoreServiceImpl implements ScoreService {
 
         for (int i = 0; i < leaderBoardDtoList.size(); i++){
             for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()>leaderBoardDtoList.get(j).getScore()){
+                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
                     LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
                     BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
                     BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
@@ -199,7 +199,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();
@@ -239,7 +239,7 @@ public class ScoreServiceImpl implements ScoreService {
 
         for (int i = 0; i < leaderBoardDtoList.size(); i++){
             for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()>leaderBoardDtoList.get(j).getScore()){
+                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
                     LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
                     BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
                     BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
@@ -248,7 +248,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i <userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();
@@ -270,14 +270,24 @@ public class ScoreServiceImpl implements ScoreService {
         List<String> userIdList = leaderBoardService.getAllUserId();
         List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
+        List<ScoreDto> scoreDtos = new ArrayList<>();
+        int m = 0;
+        for (ScoreDto scoreDto: scoreDtoList){
+            if (scoreDtoList.get(m).getContestId().equals(id)){
+                for(int k = 0; k < min(userIdList.size(),scoreDtoList.size()); k++) {
+                    if (scoreDtoList.get(m).getUserId().equals(userIdList.get(k)))
+                        scoreDtos.add(scoreDto);
+                }
+            }
+        }
         for (int i = 0; i < min(userIdList.size(),10); i++){
 
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),scoreList.get(i).getPoints());
+            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),scoreDtos.get(i).getPoints());
             leaderBoardDtoList.add(leaderBoardDto);
         }
         for (int i = 0; i < leaderBoardDtoList.size(); i++){
             for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()>leaderBoardDtoList.get(j).getScore()){
+                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
                     LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
                     BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
                     BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
@@ -286,7 +296,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();
