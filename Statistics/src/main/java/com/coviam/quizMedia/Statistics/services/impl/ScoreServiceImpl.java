@@ -22,6 +22,10 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.*;
 
+import java.lang.Math.*;
+
+import static java.lang.Integer.min;
+
 @Service
 public class ScoreServiceImpl implements ScoreService {
 
@@ -113,7 +117,7 @@ public class ScoreServiceImpl implements ScoreService {
         List<String> userIdList = leaderBoardService.getAllUserId();
         List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
             int points = 0;
             for (Score score : scoreList){
@@ -149,7 +153,7 @@ public class ScoreServiceImpl implements ScoreService {
         List<String> userIdList = leaderBoardService.getAllUserId();
         List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
             List<Score> filterScoreList = new ArrayList<>();
             LocalDate today = LocalDate.now();
@@ -210,7 +214,7 @@ public class ScoreServiceImpl implements ScoreService {
         List<String> userIdList = leaderBoardService.getAllUserId();
         List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
             List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
             List<Score> filterScoreList = new ArrayList<>();
             LocalDate today = LocalDate.now();
@@ -266,7 +270,7 @@ public class ScoreServiceImpl implements ScoreService {
         List<String> userIdList = leaderBoardService.getAllUserId();
         List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
         List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < userIdList.size(); i++){
+        for (int i = 0; i < min(userIdList.size(),10); i++){
 
             LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),scoreList.get(i).getPoints());
             leaderBoardDtoList.add(leaderBoardDto);

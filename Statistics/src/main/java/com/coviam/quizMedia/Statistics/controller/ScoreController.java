@@ -36,7 +36,7 @@ public class ScoreController {
             scoreServiceImpl.calculateGlobalLeaderBoard("1","Global");
             scoreServiceImpl.calculateWeeklyLeaderBoard("2","Weekly");
             scoreServiceImpl.calculateDailyLeaderBoard("3","Daily");
-            scoreServiceImpl.calculateLeaderBoardPerContest(state.getContestId(),state.getContestName());
+          //  scoreServiceImpl.calculateLeaderBoardPerContest(state.getContestId(),state.getContestName());
         });
 
         return new ResponseEntity<List<ScoreDto>>( scoreDtos, HttpStatus.OK);

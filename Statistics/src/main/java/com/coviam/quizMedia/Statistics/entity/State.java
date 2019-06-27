@@ -2,6 +2,7 @@ package com.coviam.quizMedia.Statistics.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 public class  State {
 
     @Id
+    @Field("state_id")
     private String stateId;
 
     private String userId;
