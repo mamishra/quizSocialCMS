@@ -25,62 +25,90 @@ public class ScoreController {
     ScoreServiceImpl scoreServiceImpl;
 
     @RequestMapping(method = RequestMethod.POST, value = "/saveScore")
-    public ResponseEntity<?> saveScore(@RequestBody State state){
+    public ResponseEntity<?> saveScore(@RequestBody State state) {
 
-        List<Score> list = scoreService.saveScore(state);
-        List<ScoreDto> scoreDtos = new ArrayList<>();
-        list.forEach((sta)->{
-            ScoreDto scoreDto = new ScoreDto();
-            BeanUtils.copyProperties(sta,scoreDto);
-            scoreDtos.add(scoreDto);
-            scoreServiceImpl.calculateGlobalLeaderBoard("1","Global");
-            scoreServiceImpl.calculateWeeklyLeaderBoard("2","Weekly");
-            scoreServiceImpl.calculateDailyLeaderBoard("3","Daily");
-          //  scoreServiceImpl.calculateLeaderBoardPerContest(state.getContestId(),state.getContestName());
-        });
+        try{
+            List<Score> list = scoreService.saveScore(state);
+            List<ScoreDto> scoreDtos = new ArrayList<>();
+            list.forEach((sta) -> {
+                ScoreDto scoreDto = new ScoreDto();
+                BeanUtils.copyProperties(sta, scoreDto);
+                scoreDtos.add(scoreDto);
+                scoreServiceImpl.calculateGlobalLeaderBoard("1", "Global");
+                scoreServiceImpl.calculateWeeklyLeaderBoard("2", "Weekly");
+                scoreServiceImpl.calculateDailyLeaderBoard("3", "Daily");
+                //scoreServiceImpl.calculateLeaderBoardPerContest(state.getContestId(),state.getContestName());
+            });
 
-        return new ResponseEntity<List<ScoreDto>>( scoreDtos, HttpStatus.OK);
+            return new ResponseEntity<List<ScoreDto>>(scoreDtos, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
+
+        }
 
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getScore")
     public ResponseEntity<?> getScore(@RequestBody State state){
 
-        List<Score> scoreList = scoreService.fetchScore(state);
-        ScoreDto scoreDto = new ScoreDto();
-        scoreList.forEach((score)->{
-            if (score.getUserId().equals(state.getUserId())){
-                BeanUtils.copyProperties(score,scoreDto);
-            }
-        });
+        try {
+            List<Score> scoreList = scoreService.fetchScore(state);
+            ScoreDto scoreDto = new ScoreDto();
+            scoreList.forEach((score) -> {
+                if (score.getUserId().equals(state.getUserId())) {
+                    BeanUtils.copyProperties(score, scoreDto);
+                }
+            });
 
-        return new ResponseEntity<ScoreDto>(scoreDto,HttpStatus.OK);
+            return new ResponseEntity<ScoreDto>(scoreDto, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error getting score\"}", HttpStatus.OK);
+
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getScore/{contestId}")
     public ResponseEntity<?> getScoreByContestId(@PathVariable("contestId") String contestId){
 
-        List<Score> scoreList = scoreService.scoreByContestId(contestId);
-        List<ScoreDto> scoreDtoList = new ArrayList<>();
-        scoreList.forEach((score)->{
+        try {
+            List<Score> scoreList = scoreService.scoreByContestId(contestId);
+            List<ScoreDto> scoreDtoList = new ArrayList<>();
+            scoreList.forEach((score) -> {
                 ScoreDto scoreDto = new ScoreDto();
-                BeanUtils.copyProperties(score,scoreDto);
+                BeanUtils.copyProperties(score, scoreDto);
                 scoreDtoList.add(scoreDto);
             });
-        return new ResponseEntity<List<ScoreDto>>(scoreDtoList,HttpStatus.OK);
+            return new ResponseEntity<List<ScoreDto>>(scoreDtoList, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error getting score\"}", HttpStatus.OK);
+
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getScoreByUserIdContestId")
     public ResponseEntity<?> getScoreByContestIdUserId(@RequestParam(name = "userId") String userId, @RequestParam(name = "contestId") String contestId){
 
-        List<Score> scoreList = scoreService.scoreByContestId(contestId);
-        ScoreDto scoreDto = new ScoreDto();
-        scoreList.forEach((score)->{
-            if (score.getUserId().equals(userId)) {
-                BeanUtils.copyProperties(score, scoreDto);
-            }
-        });
-        return new ResponseEntity<ScoreDto>(scoreDto,HttpStatus.OK);
+        try {
+            List<Score> scoreList = scoreService.scoreByContestId(contestId);
+            ScoreDto scoreDto = new ScoreDto();
+            scoreList.forEach((score) -> {
+                if (score.getUserId().equals(userId)) {
+                    BeanUtils.copyProperties(score, scoreDto);
+                }
+            });
+            return new ResponseEntity<ScoreDto>(scoreDto, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<String>("{\"err\":\"error getting score\"}", HttpStatus.OK);
+
+        }
     }
 
 }
