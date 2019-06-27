@@ -134,7 +134,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < userIdList.size(); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();
@@ -195,7 +195,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < userIdList.size(); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();
@@ -244,7 +244,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
         List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i <userIdList.size(); i++){
             resultList.add(leaderBoardDtoList.get(i));
         }
         LeaderBoardEntity l=new LeaderBoardEntity();

@@ -74,6 +74,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> saveAllQuestionObject(List<Question> list) {
+        return questionRepository.save(list);
+    }
+
+    @Override
     public List<String> deleteByIdCategory(String id, String category) {
         List<Question> queList = questionRepository.getQuestionByCategory(category);
         List<String> list = new ArrayList<>();

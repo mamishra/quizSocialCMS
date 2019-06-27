@@ -13,5 +13,6 @@ public interface QuestionService {
     List<String> deleteByIdCategory(String id, String category);
     Question getQuestionByQueNo(String queNo);
     List<Question> getQuestionListByQuesNos(String[] queNoList);
+    List<Question> saveAllQuestionObject(List<Question> list);
 
 }

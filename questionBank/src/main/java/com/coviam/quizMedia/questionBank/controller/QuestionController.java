@@ -35,6 +35,21 @@ public class QuestionController {
 
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/saveAllQuestions")
+    public ResponseEntity<?> saveAllQuestionsObject(@RequestBody List<Question> list){
+
+        List<Question> questionList = questionService.saveAllQuestionObject(list);
+        List<QuestionDto> questionDtoList = new ArrayList<>();
+        questionList.forEach((que)->{
+            QuestionDto questionDto = new QuestionDto();
+            BeanUtils.copyProperties(que, questionDto);
+            questionDtoList.add(questionDto);
+        });
+
+        return new ResponseEntity<List<QuestionDto>>( questionDtoList,HttpStatus.OK);
+
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/getAll")
     public ResponseEntity<?> getAllQuestions(){
 

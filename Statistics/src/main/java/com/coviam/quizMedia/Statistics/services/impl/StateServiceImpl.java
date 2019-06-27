@@ -24,6 +24,24 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
+    public List<State> updateState(State state) {
+
+        String contestId = state.getContestId();
+        List<State> stateList = stateRepository.findByContestId(contestId);
+        State state1 = new State();
+        for (State st : stateList){
+            if (st.getUserId().equals(state.getUserId())){
+                BeanUtils.copyProperties(st,state1);
+            }
+        }
+        List<State> list = new ArrayList<>();
+        list.add(state);
+        stateRepository.delete(state1.getStateId());
+        return stateRepository.save(list);
+
+    }
+
+    @Override
     public State fetchState(String userId, String contestId) {
 
         List<State> stateList = stateRepository.findByContestId(contestId);
@@ -34,5 +52,9 @@ public class StateServiceImpl implements StateService {
             }
         });
         return stateObj;
+
+
     }
+
+
 }
