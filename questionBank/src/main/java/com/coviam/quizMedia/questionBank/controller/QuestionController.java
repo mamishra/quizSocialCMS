@@ -2,6 +2,7 @@ package com.coviam.quizMedia.questionBank.controller;
 
 import com.coviam.quizMedia.questionBank.dto.QuestionDto;
 import com.coviam.quizMedia.questionBank.entity.Question;
+import com.coviam.quizMedia.questionBank.entity.QuestionLog;
 import com.coviam.quizMedia.questionBank.services.QuestionService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,44 +24,8 @@ public class QuestionController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/saveAll")
     public ResponseEntity<?> saveAllQuestions(@RequestBody String fileName){
-
-        try {
-            List<Question> questionList = questionService.getQuestionListFromFile(fileName);
-            List<QuestionDto> questionDtoList = new ArrayList<>();
-            questionList.forEach((que) -> {
-                QuestionDto questionDto = new QuestionDto();
-                BeanUtils.copyProperties(que, questionDto);
-                questionDtoList.add(questionDto);
-            });
-
-            return new ResponseEntity<String>("{\"msg\":\"saved\"}", HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
-            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
-
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/saveAllQuestions")
-    public ResponseEntity<?> saveAllQuestionsObject(@RequestBody List<Question> list) {
-
-        try {
-            List<Question> questionList = questionService.saveAllQuestionObject(list);
-            List<QuestionDto> questionDtoList = new ArrayList<>();
-            questionList.forEach((que) -> {
-                QuestionDto questionDto = new QuestionDto();
-                BeanUtils.copyProperties(que, questionDto);
-                questionDtoList.add(questionDto);
-            });
-
-            return new ResponseEntity<List<QuestionDto>>(questionDtoList, HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
-            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
-
-        }
+            QuestionLog qLg = questionService.getQuestionListFromFile(fileName);
+            return new ResponseEntity<QuestionLog>(qLg, HttpStatus.OK);
 
     }
 
@@ -73,6 +38,11 @@ public class QuestionController {
             questionList.forEach((que)->{
                 QuestionDto questionDto = new QuestionDto();
                 BeanUtils.copyProperties(que, questionDto);
+                questionDto.setQuestion(que.getQuestion().getQue());
+                questionDto.setOption1(que.getQuestion().getOp1());
+                questionDto.setOption2(que.getQuestion().getOp2());
+                questionDto.setOption3(que.getQuestion().getOp3());
+                questionDto.setOption4(que.getQuestion().getOp4());
                 questionDtoList.add(questionDto);
             });
 
@@ -96,6 +66,11 @@ public class QuestionController {
             questionList.forEach((que) -> {
                 QuestionDto questionDto = new QuestionDto();
                 BeanUtils.copyProperties(que, questionDto);
+                questionDto.setQuestion(que.getQuestion().getQue());
+                questionDto.setOption1(que.getQuestion().getOp1());
+                questionDto.setOption2(que.getQuestion().getOp2());
+                questionDto.setOption3(que.getQuestion().getOp3());
+                questionDto.setOption4(que.getQuestion().getOp4());
                 questionDtoList.add(questionDto);
             });
             System.out.println("Sending response"+new Date());
@@ -105,24 +80,6 @@ public class QuestionController {
         catch (Exception e)
         {
             return new ResponseEntity<String>("{\"err\":\"error fetching\"}", HttpStatus.OK);
-
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/getQuestion/{queNo}")
-    public ResponseEntity<?> getQuestionByQueNo(@PathVariable("queNo") String queNo) {
-
-        try{
-
-            Question question = questionService.getQuestionByQueNo(queNo);
-            QuestionDto questionDto = new QuestionDto();
-            BeanUtils.copyProperties(question, questionDto);
-
-            return new ResponseEntity<QuestionDto>(questionDto, HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
-            return new ResponseEntity<String>("{\"err\":\"error getting question\"}", HttpStatus.OK);
 
         }
     }
@@ -137,6 +94,11 @@ public class QuestionController {
             questionList.forEach((que) -> {
                 QuestionDto questionDto = new QuestionDto();
                 BeanUtils.copyProperties(que, questionDto);
+                questionDto.setQuestion(que.getQuestion().getQue());
+                questionDto.setOption1(que.getQuestion().getOp1());
+                questionDto.setOption2(que.getQuestion().getOp2());
+                questionDto.setOption3(que.getQuestion().getOp3());
+                questionDto.setOption4(que.getQuestion().getOp4());
                 questionDtoList.add(questionDto);
             });
 
@@ -149,21 +111,61 @@ public class QuestionController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity<?> getquestionByCategory(@RequestParam(name = "queNo") String queNo, @RequestParam(name = "category") String category){
+//    @RequestMapping(method = RequestMethod.POST, value = "/saveAllQuestions")
+//    public ResponseEntity<?> saveAllQuestionsObject(@RequestBody List<Question> list) {
+//
+//        try {
+//            List<Question> questionList = questionService.saveAllQuestionObject(list);
+//            List<QuestionDto> questionDtoList = new ArrayList<>();
+//            questionList.forEach((que) -> {
+//                QuestionDto questionDto = new QuestionDto();
+//                BeanUtils.copyProperties(que, questionDto);
+//                questionDtoList.add(questionDto);
+//            });
+//
+//            return new ResponseEntity<List<QuestionDto>>(questionDtoList, HttpStatus.OK);
+//        }
+//        catch (Exception e)
+//        {
+//            return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
+//
+//        }
+//
+//    }
 
-        try {
-            List<String> list = questionService.deleteByIdCategory(queNo, category);
+//    @RequestMapping(method = RequestMethod.GET, value = "/getQuestion/{queNo}")
+//    public ResponseEntity<?> getQuestionByQueNo(@PathVariable("queNo") String queNo) {
+//
+//        try{
+//
+//            Question question = questionService.getQuestionByQueNo(queNo);
+//            QuestionDto questionDto = new QuestionDto();
+//            BeanUtils.copyProperties(question, questionDto);
+//
+//            return new ResponseEntity<QuestionDto>(questionDto, HttpStatus.OK);
+//        }
+//        catch (Exception e)
+//        {
+//            return new ResponseEntity<String>("{\"err\":\"error getting question\"}", HttpStatus.OK);
+//
+//        }
+//    }
 
-
-            return new ResponseEntity<List<String>>(list, HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
-            return new ResponseEntity<String>("{\"err\":\"error in deleting\"}", HttpStatus.OK);
-
-        }
-    }
+//    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+//    public ResponseEntity<?> deletequestionByCategory(@RequestParam(name = "queNo") String queNo, @RequestParam(name = "category") String category){
+//
+//        try {
+//            List<String> list = questionService.deleteByIdCategory(queNo, category);
+//
+//
+//            return new ResponseEntity<List<String>>(list, HttpStatus.OK);
+//        }
+//        catch (Exception e)
+//        {
+//            return new ResponseEntity<String>("{\"err\":\"error in deleting\"}", HttpStatus.OK);
+//
+//        }
+//    }
 
 
 }
