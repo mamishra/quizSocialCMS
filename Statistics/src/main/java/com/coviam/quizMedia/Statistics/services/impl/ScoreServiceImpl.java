@@ -44,7 +44,7 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Autowired
-    RestTemplate restTemplate;
+    RestTemplate    restTemplate;
     @Autowired
     LeaderBoardService leaderBoardService;
     @Autowired
@@ -113,49 +113,48 @@ public class ScoreServiceImpl implements ScoreService {
         return scoreList;
     }
 
-    public void calculateGlobalLeaderBoard(String id,String name){
-        List<String> userIdList = leaderBoardService.getAllUserId();
-        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
-        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
-            int points = 0;
-            for (Score score : scoreList){
-                points+=score.getPoints();
+    public void calculateGlobalLeaderBoard(String id,String name)
+    {
+        List<Score> scoreList=scoreRepository.findAll();
+        HashSet<String> userIds=new HashSet<>();
+        List<LeaderBoardDto> leaderBoardDtoList=new ArrayList<>();
+        HashMap<String,String> userIdScoreList=new HashMap<>();
+        for(Score score:scoreList)
+        {
+            userIds.add(score.getUserId());
+            if(userIdScoreList.get(score.getUserId())==null){
+                userIdScoreList.put(score.getUserId(), String.valueOf(score.getPoints()));
             }
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
-            leaderBoardDtoList.add(leaderBoardDto);
-        }
+            else {
+                int newScore=score.getPoints()+Integer.parseInt(userIdScoreList.get(score.getUserId()));
+                userIdScoreList.replace(score.getUserId(), String.valueOf(newScore));
+            }
 
-        for (int i = 0; i < leaderBoardDtoList.size(); i++){
-            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
-                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
-                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
-                }
-            }
         }
-        List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            resultList.add(leaderBoardDtoList.get(i));
+        List<String> list= new ArrayList<>(userIds);
+        List<String> nameList=leaderBoardService.getUserNameList(list);
+        System.out.println(nameList);
+
+        List<LeaderBoardDto> leaderBoardDtos=new ArrayList<>();
+        for(int i=0;i<userIds.size();i++)
+        {
+            LeaderBoardDto leaderBoardDto=new LeaderBoardDto(list.get(i),nameList.get(i),Integer.parseInt(userIdScoreList.get(list.get(i))));
+            leaderBoardDtos.add(leaderBoardDto);
         }
-        LeaderBoardEntity l=new LeaderBoardEntity();
-        l.setId(id);
-        l.setLeaderBoardName(name);
-        l.setLeadersDetails(resultList);
-        leaderBoardDbService.save(l);
+        Collections.sort(leaderBoardDtos);
+        System.out.println(leaderBoardDtos);
+        LeaderBoardEntity leaderBoardEntity=new LeaderBoardEntity(id,name,leaderBoardDtos);
+        leaderBoardDbService.save(leaderBoardEntity);
     }
+
 
     public void calculateWeeklyLeaderBoard(String id,String name)
     {
-        List<String> userIdList = leaderBoardService.getAllUserId();
-        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
-        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
-            List<Score> filterScoreList = new ArrayList<>();
+        List<Score> scoreList=scoreRepository.findAll();
+        HashSet<String> userIds=new HashSet<>();
+        List<LeaderBoardDto> leaderBoardDtoList=new ArrayList<>();
+        HashMap<String,String> userIdScoreList=new HashMap<>();
+        List<Score> filterScoreList = new ArrayList<>();
             LocalDate today = LocalDate.now();
             // Go backward to get Monday
             LocalDate monday = today;
@@ -179,130 +178,277 @@ public class ScoreServiceImpl implements ScoreService {
                 }
 
             }
-
-            int points = 0;
-            for (Score score : filterScoreList){
-                points+=score.getPoints();
+        for(Score score:filterScoreList)
+        {
+            userIds.add(score.getUserId());
+            if(userIdScoreList.get(score.getUserId())==null){
+                userIdScoreList.put(score.getUserId(), String.valueOf(score.getPoints()));
             }
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
-            leaderBoardDtoList.add(leaderBoardDto);
-        }
-
-        for (int i = 0; i < leaderBoardDtoList.size(); i++){
-            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
-                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
-                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
-                }
+            else {
+                int newScore=score.getPoints()+Integer.parseInt(userIdScoreList.get(score.getUserId()));
+                userIdScoreList.replace(score.getUserId(), String.valueOf(newScore));
             }
+
         }
-        List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            resultList.add(leaderBoardDtoList.get(i));
+        List<String> list= new ArrayList<>(userIds);
+        List<String> nameList=leaderBoardService.getUserNameList(list);
+        System.out.println(nameList);
+
+        List<LeaderBoardDto> leaderBoardDtos=new ArrayList<>();
+        for(int i=0;i<userIds.size();i++)
+        {
+            LeaderBoardDto leaderBoardDto=new LeaderBoardDto(list.get(i),nameList.get(i),Integer.parseInt(userIdScoreList.get(list.get(i))));
+            leaderBoardDtos.add(leaderBoardDto);
         }
-        LeaderBoardEntity l=new LeaderBoardEntity();
-        l.setId(id);
-        l.setLeaderBoardName(name);
-        l.setLeadersDetails(resultList);
-        leaderBoardDbService.save(l);
+        Collections.sort(leaderBoardDtos);
+        System.out.println(leaderBoardDtos);
+        LeaderBoardEntity leaderBoardEntity=new LeaderBoardEntity(id,name,leaderBoardDtos);
+        leaderBoardDbService.save(leaderBoardEntity);
     }
 
     public void calculateDailyLeaderBoard(String id,String name)
     {
-        List<String> userIdList = leaderBoardService.getAllUserId();
-        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
-        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
-            List<Score> filterScoreList = new ArrayList<>();
-            LocalDate today = LocalDate.now();
+        List<Score> scoreList=scoreRepository.findAll();
+        HashSet<String> userIds=new HashSet<>();
+        List<LeaderBoardDto> leaderBoardDtoList=new ArrayList<>();
+        HashMap<String,String> userIdScoreList=new HashMap<>();
+        List<Score> filterScoreList = new ArrayList<>();
+        LocalDate today = LocalDate.now();
 
-            for (Score score : scoreList){
-                Date timestamp = score.getTimeStamp();
-                Instant instant = Instant.ofEpochMilli(timestamp.getTime());
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-                LocalDate submissionTime = localDateTime.toLocalDate();
-                if (submissionTime.equals(today)){
-                    filterScoreList.add(score);
-                }
-            }
-
-            int points = 0;
-            for (Score score : filterScoreList){
-                points+=score.getPoints();
-            }
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
-            leaderBoardDtoList.add(leaderBoardDto);
-        }
-
-        for (int i = 0; i < leaderBoardDtoList.size(); i++){
-            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
-                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
-                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
-                }
+        for (Score score : scoreList){
+            Date timestamp = score.getTimeStamp();
+            Instant instant = Instant.ofEpochMilli(timestamp.getTime());
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            LocalDate submissionTime = localDateTime.toLocalDate();
+            if (submissionTime.equals(today)){
+                filterScoreList.add(score);
             }
         }
-        List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            resultList.add(leaderBoardDtoList.get(i));
+        for(Score score:filterScoreList)
+        {
+            userIds.add(score.getUserId());
+            if(userIdScoreList.get(score.getUserId())==null){
+                userIdScoreList.put(score.getUserId(), String.valueOf(score.getPoints()));
+            }
+            else {
+                int newScore=score.getPoints()+Integer.parseInt(userIdScoreList.get(score.getUserId()));
+                userIdScoreList.replace(score.getUserId(), String.valueOf(newScore));
+            }
+
         }
-        LeaderBoardEntity l=new LeaderBoardEntity();
-        l.setId(id);
-        l.setLeaderBoardName(name);
-        l.setLeadersDetails(resultList);
-        leaderBoardDbService.save(l);
+        List<String> list= new ArrayList<>(userIds);
+        List<String> nameList=leaderBoardService.getUserNameList(list);
+        System.out.println(nameList);
+
+        List<LeaderBoardDto> leaderBoardDtos=new ArrayList<>();
+        for(int i=0;i<userIds.size();i++)
+        {
+            LeaderBoardDto leaderBoardDto=new LeaderBoardDto(list.get(i),nameList.get(i),Integer.parseInt(userIdScoreList.get(list.get(i))));
+            leaderBoardDtos.add(leaderBoardDto);
+        }
+        Collections.sort(leaderBoardDtos);
+        System.out.println(leaderBoardDtos);
+        LeaderBoardEntity leaderBoardEntity=new LeaderBoardEntity(id,name,leaderBoardDtos);
+        leaderBoardDbService.save(leaderBoardEntity);
     }
-
-    public void calculateLeaderBoardPerContest(String id,String name)
+    public void calculateContestLeaderBoard(String id,String name)
     {
-        List<Score> scoreList = leaderBoardService.getGlobalLeaderBoardPerContest(id);
-        List<ScoreDto> scoreDtoList = new ArrayList<>();
-        scoreList.forEach((score)->{
-            ScoreDto scoreDto = new ScoreDto();
-            BeanUtils.copyProperties(score,scoreDto);
-            scoreDtoList.add(scoreDto);
-        });
-        List<String> userIdList = leaderBoardService.getAllUserId();
-        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
-        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
-        List<ScoreDto> scoreDtos = new ArrayList<>();
-        int m = 0;
-        for (ScoreDto scoreDto: scoreDtoList){
-            if (scoreDtoList.get(m).getContestId().equals(id)){
-                for(int k = 0; k < min(userIdList.size(),scoreDtoList.size()); k++) {
-                    if (scoreDtoList.get(m).getUserId().equals(userIdList.get(k)))
-                        scoreDtos.add(scoreDto);
-                }
-            }
-        }
-        for (int i = 0; i < min(userIdList.size(),10); i++){
+        List<Score> scoreList=scoreRepository.findAll();
+        HashSet<String> userIds=new HashSet<>();
+        List<LeaderBoardDto> leaderBoardDtoList=new ArrayList<>();
+        HashMap<String,String> userIdScoreList=new HashMap<>();
+        List<Score> filterScoreList = new ArrayList<>();
 
-            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),scoreDtos.get(i).getPoints());
-            leaderBoardDtoList.add(leaderBoardDto);
+        for(Score score:scoreList)
+        {
+            if(score.getContestId().equals(id))
+                filterScoreList.add(score);
         }
-        for (int i = 0; i < leaderBoardDtoList.size(); i++){
-            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
-                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
-                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
-                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
-                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
-                }
+
+        for(Score score:filterScoreList)
+        {
+            userIds.add(score.getUserId());
+            if(userIdScoreList.get(score.getUserId())==null){
+                userIdScoreList.put(score.getUserId(), String.valueOf(score.getPoints()));
             }
+            else {
+                int newScore=score.getPoints()+Integer.parseInt(userIdScoreList.get(score.getUserId()));
+                userIdScoreList.replace(score.getUserId(), String.valueOf(newScore));
+            }
+
         }
-        List<LeaderBoardDto> resultList = new ArrayList<>();
-        for (int i = 0; i < min(userIdList.size(),10); i++){
-            resultList.add(leaderBoardDtoList.get(i));
+        List<String> list= new ArrayList<>(userIds);
+        List<String> nameList=leaderBoardService.getUserNameList(list);
+        System.out.println(nameList);
+
+        List<LeaderBoardDto> leaderBoardDtos=new ArrayList<>();
+        for(int i=0;i<userIds.size();i++)
+        {
+            LeaderBoardDto leaderBoardDto=new LeaderBoardDto(list.get(i),nameList.get(i),Integer.parseInt(userIdScoreList.get(list.get(i))));
+            leaderBoardDtos.add(leaderBoardDto);
         }
-        LeaderBoardEntity l=new LeaderBoardEntity();
-        l.setId(id);
-        l.setLeaderBoardName(name);
-        l.setLeadersDetails(resultList);
-        leaderBoardDbService.save(l);
+        Collections.sort(leaderBoardDtos);
+        System.out.println(leaderBoardDtos);
+        LeaderBoardEntity leaderBoardEntity=new LeaderBoardEntity(id,name,leaderBoardDtos);
+        leaderBoardDbService.save(leaderBoardEntity);
     }
+
+//
+//    public void calculateWeeklyLeaderBoard(String id,String name)
+//    {
+//        List<String> userIdList = leaderBoardService.getAllUserId();
+//        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
+//        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
+//        for (int i = 0; i < min(userIdList.size(),10); i++){
+//            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
+//            List<Score> filterScoreList = new ArrayList<>();
+//            LocalDate today = LocalDate.now();
+//            // Go backward to get Monday
+//            LocalDate monday = today;
+//            while (monday.getDayOfWeek() != DayOfWeek.MONDAY) {
+//                monday = monday.minusDays(1);
+//            }
+//
+//            // Go forward to get Sunday
+//            LocalDate sunday = today;
+//            while (sunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
+//                sunday = sunday.plusDays(1);
+//            }
+//
+//            for (Score score : scoreList){
+//                Date timestamp = score.getTimeStamp();
+//                Instant instant = Instant.ofEpochMilli(timestamp.getTime());
+//                LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+//                LocalDate submissionTime = localDateTime.toLocalDate();
+//                if (((submissionTime.isBefore(sunday))||(submissionTime.equals(sunday))&&(submissionTime.isAfter(monday))||(submissionTime.equals(monday)))){
+//                    filterScoreList.add(score);
+//                }
+//
+//            }
+//
+//            int points = 0;
+//            for (Score score : filterScoreList){
+//                points+=score.getPoints();
+//            }
+//            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
+//            leaderBoardDtoList.add(leaderBoardDto);
+//        }
+//
+//        for (int i = 0; i < leaderBoardDtoList.size(); i++){
+//            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
+//                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
+//                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
+//                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
+//                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
+//                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
+//                }
+//            }
+//        }
+//        List<LeaderBoardDto> resultList = new ArrayList<>();
+//        for (int i = 0; i < min(userIdList.size(),10); i++){
+//            resultList.add(leaderBoardDtoList.get(i));
+//        }
+//        LeaderBoardEntity l=new LeaderBoardEntity();
+//        l.setId(id);
+//        l.setLeaderBoardName(name);
+//        l.setLeadersDetails(resultList);
+//        leaderBoardDbService.save(l);
+//    }
+//
+//    public void calculateDailyLeaderBoard(String id,String name)
+//    {
+//        List<String> userIdList = leaderBoardService.getAllUserId();
+//        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
+//        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
+//        for (int i = 0; i < min(userIdList.size(),10); i++){
+//            List<Score> scoreList = scoreService.getScoreByUserId(userIdList.get(i));
+//            List<Score> filterScoreList = new ArrayList<>();
+//            LocalDate today = LocalDate.now();
+//
+//            for (Score score : scoreList){
+//                Date timestamp = score.getTimeStamp();
+//                Instant instant = Instant.ofEpochMilli(timestamp.getTime());
+//                LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+//                LocalDate submissionTime = localDateTime.toLocalDate();
+//                if (submissionTime.equals(today)){
+//                    filterScoreList.add(score);
+//                }
+//            }
+//
+//            int points = 0;
+//            for (Score score : filterScoreList){
+//                points+=score.getPoints();
+//            }
+//            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),points);
+//            leaderBoardDtoList.add(leaderBoardDto);
+//        }
+//
+//        for (int i = 0; i < leaderBoardDtoList.size(); i++){
+//            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
+//                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
+//                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
+//                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
+//                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
+//                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
+//                }
+//            }
+//        }
+//        List<LeaderBoardDto> resultList = new ArrayList<>();
+//        for (int i = 0; i < min(userIdList.size(),10); i++){
+//            resultList.add(leaderBoardDtoList.get(i));
+//        }
+//        LeaderBoardEntity l=new LeaderBoardEntity();
+//        l.setId(id);
+//        l.setLeaderBoardName(name);
+//        l.setLeadersDetails(resultList);
+//        leaderBoardDbService.save(l);
+//    }
+//
+//    public void calculateLeaderBoardPerContest(String id,String name)
+//    {
+//        List<Score> scoreList = leaderBoardService.getGlobalLeaderBoardPerContest(id);
+//        List<ScoreDto> scoreDtoList = new ArrayList<>();
+//        scoreList.forEach((score)->{
+//            ScoreDto scoreDto = new ScoreDto();
+//            BeanUtils.copyProperties(score,scoreDto);
+//            scoreDtoList.add(scoreDto);
+//        });
+//        List<String> userIdList = leaderBoardService.getAllUserId();
+//        List<String> userNameList = leaderBoardService.getUserNameList(userIdList);
+//        List<LeaderBoardDto> leaderBoardDtoList = new ArrayList<>();
+//        List<ScoreDto> scoreDtos = new ArrayList<>();
+//        int m = 0;
+//        for (ScoreDto scoreDto: scoreDtoList){
+//            if (scoreDtoList.get(m).getContestId().equals(id)){
+//                for(int k = 0; k < min(userIdList.size(),scoreDtoList.size()); k++) {
+//                    if (scoreDtoList.get(m).getUserId().equals(userIdList.get(k)))
+//                        scoreDtos.add(scoreDto);
+//                }
+//            }
+//        }
+//        for (int i = 0; i < min(userIdList.size(),10); i++){
+//
+//            LeaderBoardDto leaderBoardDto = new LeaderBoardDto(userIdList.get(i),userNameList.get(i),scoreDtos.get(i).getPoints());
+//            leaderBoardDtoList.add(leaderBoardDto);
+//        }
+//        for (int i = 0; i < leaderBoardDtoList.size(); i++){
+//            for (int j = i+1; j < leaderBoardDtoList.size(); j++ ){
+//                if (leaderBoardDtoList.get(i).getScore()<leaderBoardDtoList.get(j).getScore()){
+//                    LeaderBoardDto leaderBoardDto = new LeaderBoardDto();
+//                    BeanUtils.copyProperties(leaderBoardDtoList.get(i),leaderBoardDto);
+//                    BeanUtils.copyProperties(leaderBoardDtoList.get(j),leaderBoardDtoList.get(i));
+//                    BeanUtils.copyProperties(leaderBoardDto,leaderBoardDtoList.get(j));
+//                }
+//            }
+//        }
+//        List<LeaderBoardDto> resultList = new ArrayList<>();
+//        for (int i = 0; i < min(userIdList.size(),10); i++){
+//            resultList.add(leaderBoardDtoList.get(i));
+//        }
+//        LeaderBoardEntity l=new LeaderBoardEntity();
+//        l.setId(id);
+//        l.setLeaderBoardName(name);
+//        l.setLeadersDetails(resultList);
+//        leaderBoardDbService.save(l);
+//    }
 }

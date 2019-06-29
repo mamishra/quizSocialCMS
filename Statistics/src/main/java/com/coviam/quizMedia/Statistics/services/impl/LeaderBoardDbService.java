@@ -33,5 +33,10 @@ public class LeaderBoardDbService implements LeaderBoardDbInterface {
         return leaderBoardRepository.findOne(id);
     }
 
+    @Override
+    public List<LeaderBoardEntity> findAll() {
+        return leaderBoardRepository.findAll();
+    }
+
 
 }

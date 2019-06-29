@@ -1,7 +1,9 @@
 package com.coviam.quizMedia.Statistics;
 
+import com.coviam.quizMedia.Statistics.services.impl.ScoreServiceImpl;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
@@ -12,7 +14,6 @@ public class StatisticsApplication extends AbstractMongoConfiguration {
 	public static void main(String[] args) {
 		SpringApplication.run(StatisticsApplication.class, args);
 	}
-
 	@Override
 	protected String getDatabaseName() {
 		return "statisticsdb";

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping(value = "/leaderboard")
@@ -29,6 +31,25 @@ public class LeaderBoardController {
 
     @Autowired
     ScoreService scoreService;
+
+    @RequestMapping(method = RequestMethod.GET,value = "/getTop3Leaders")
+    public ResponseEntity<?> getTop3Leaders(){
+        List<LeaderBoardEntity> leaderBoardEntities = leaderBoardDbService.findAll();
+        List<LeaderBoardEntity> leaderBoardEntities1 = leaderBoardEntities.subList(3, leaderBoardEntities.size());
+        List<LeaderBoardEntity> list=new ArrayList<>();
+        List<Integer> range = IntStream.range(3, leaderBoardEntities.size()).boxed()
+                .collect(Collectors.toCollection(ArrayList::new));
+        Collections.shuffle(range);
+        int j=0;
+        while(j<4){
+            int i=range.get(j);
+            List<LeaderBoardDto> l=leaderBoardEntities.get(i).getLeadersDetails().subList(0, Math.min(3,leaderBoardEntities.get(i).getLeadersDetails().size()));
+            leaderBoardEntities.get(i).setLeadersDetails(l);
+            list.add(leaderBoardEntities.get(i));
+            j++;
+        }
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getLeaderBoard/{contestId}")
     public ResponseEntity<?> getScoreByContestId(@PathVariable("contestId") String contestId){

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,6 +28,7 @@ public class ScoreController {
     @RequestMapping(method = RequestMethod.POST, value = "/saveScore")
     public ResponseEntity<?> saveScore(@RequestBody State state) {
 
+        System.out.println("Request Recived"+new Date());
         try{
             List<Score> list = scoreService.saveScore(state);
             List<ScoreDto> scoreDtos = new ArrayList<>();
@@ -37,18 +39,25 @@ public class ScoreController {
                 scoreServiceImpl.calculateGlobalLeaderBoard("1", "Global");
                 scoreServiceImpl.calculateWeeklyLeaderBoard("2", "Weekly");
                 scoreServiceImpl.calculateDailyLeaderBoard("3", "Daily");
-                //scoreServiceImpl.calculateLeaderBoardPerContest(state.getContestId(),state.getContestName());
+                scoreServiceImpl.calculateContestLeaderBoard(state.getContestId(),state.getContestName());
             });
-
+            System.out.println(scoreDtos);
             return new ResponseEntity<List<ScoreDto>>(scoreDtos, HttpStatus.OK);
         }
         catch (Exception e)
         {
+            System.out.println("Error while saving score");
             return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
 
         }
 
     }
+
+//    @RequestMapping(method = RequestMethod.GET,value = "/tryLeaderboard")
+//    public void tryLeaderBoard()
+//    {
+//        scoreServiceImpl.calculateGlobalLeaderBoard2();
+//    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getScore")
     public ResponseEntity<?> getScore(@RequestBody State state){

@@ -23,7 +23,6 @@ public class Question {
     private String isScreened;
     private String isRejected;
 
-
     public Question() {
     }
 
@@ -191,4 +190,6 @@ public class Question {
                 ", isRejected='" + isRejected + '\'' +
                 '}';
     }
+
+
 }
