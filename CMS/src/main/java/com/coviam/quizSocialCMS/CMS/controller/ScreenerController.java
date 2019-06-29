@@ -45,8 +45,9 @@ public class ScreenerController {
     public ResponseEntity<?> getScreenedQuestion(@PathVariable("category") String category)
     {
         System.out.println("Get screened question by  called"+new Date());
-
-        return new ResponseEntity<>(screenedDataService.getScreenedQuestionsByCategory(category),HttpStatus.OK);
+        List<ScreenedDataEntityClass> list=screenedDataService.getScreenedQuestionsByCategory(category);
+        list.addAll(screenedDataService.getScreenedQuestionsByCategory(category.toLowerCase()));
+        return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
 

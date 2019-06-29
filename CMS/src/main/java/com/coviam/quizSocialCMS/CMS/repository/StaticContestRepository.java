@@ -15,10 +15,10 @@ import java.util.List;
 public interface StaticContestRepository extends MongoRepository<StaticContestEntityClass,String> {
 
     @Query("{'category':{$regex:?0}}")
-    public Page<StaticContestEntityClass> findByCategory(String name, Pageable pageable);
+    public List<StaticContestEntityClass> findByCategory(String name);
 
     @Query("{'contestName':{$regex:?0}}")
-    public Page<StaticContestEntityClass> findByContestName(String name,Pageable pageable);
+    public List<StaticContestEntityClass> findByContestName(String name);
 
 
 

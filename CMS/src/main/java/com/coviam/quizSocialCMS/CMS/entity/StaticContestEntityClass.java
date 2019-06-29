@@ -25,6 +25,15 @@ public class StaticContestEntityClass {
     Date interval;
     boolean dynamicContest;
     boolean isActive;
+    int maxNoOfSkips;
+
+    public int getMaxNoOfSkips() {
+        return maxNoOfSkips;
+    }
+
+    public void setMaxNoOfSkips(int maxNoOfSkips) {
+        this.maxNoOfSkips = maxNoOfSkips;
+    }
 
     public boolean isActive() {
         return isActive;
