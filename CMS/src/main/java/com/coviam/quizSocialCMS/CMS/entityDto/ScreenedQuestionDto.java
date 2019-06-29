@@ -10,6 +10,15 @@ public class ScreenedQuestionDto {
     String difficultyLevel;
     String resourceUrl;
     String category;
+    int maxNoOfSkips;
+
+    public int getMaxNoOfSkips() {
+        return maxNoOfSkips;
+    }
+
+    public void setMaxNoOfSkips(int maxNoOfSkips) {
+        this.maxNoOfSkips = maxNoOfSkips;
+    }
 
     public String getCategory() {
         return category;
