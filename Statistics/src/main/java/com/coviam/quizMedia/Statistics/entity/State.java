@@ -17,9 +17,19 @@ public class  State {
     private String contestName;
     private String contestId;
     private Map<String, String> response;
+    private String skipsUsed;
     
 
     public State() {
+    }
+
+    public State(String stateId, String userId, String contestName, String contestId, Map<String, String> response, String skipsUsed) {
+        this.stateId = stateId;
+        this.userId = userId;
+        this.contestName = contestName;
+        this.contestId = contestId;
+        this.response = response;
+        this.skipsUsed = skipsUsed;
     }
 
     public State(String stateId, String userId, String contestName, String contestId, Map<String, String> response) {
@@ -70,6 +80,14 @@ public class  State {
         this.response = response;
     }
 
+    public String getSkipsUsed() {
+        return skipsUsed;
+    }
+
+    public void setSkipsUsed(String skipsUsed) {
+        this.skipsUsed = skipsUsed;
+    }
+
     @Override
     public String toString() {
         return "State{" +
@@ -78,6 +96,7 @@ public class  State {
                 ", contestName='" + contestName + '\'' +
                 ", contestId='" + contestId + '\'' +
                 ", response=" + response +
+                ", skipsUsed='" + skipsUsed + '\'' +
                 '}';
     }
 }

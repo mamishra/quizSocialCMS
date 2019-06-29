@@ -53,7 +53,7 @@ public class LeaderBoardServiceImpl implements LeaderBoardService {
     @Override
     public List<String> getAllUserId() {
 
-        String url = "http://172.16.26.45:8081/getIds";
+        String url = "http://172.16.26.37:8081/getIds";
         restTemplate=new RestTemplate();
 
         ArrayList listResponseEntity=restTemplate.getForObject(url,ArrayList.class);
@@ -66,7 +66,7 @@ public class LeaderBoardServiceImpl implements LeaderBoardService {
     //........../getInfo/ get all user Ids
     @Override
     public List<String> getUserNameList(List<String> userIds) {
-        String url = "http://172.16.26.45:8081/getOnlyNames";
+        String url = "http://172.16.26.37:8081/getOnlyNames";
         restTemplate=new RestTemplate();
         ResponseEntity<ArrayList> listResponseEntity=restTemplate.postForEntity(url, (Object) userIds, ArrayList.class);
         ArrayList<String> list=listResponseEntity.getBody();

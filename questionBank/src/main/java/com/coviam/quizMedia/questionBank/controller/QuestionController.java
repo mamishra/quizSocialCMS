@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.Math.min;
+
 @RestController
 @RequestMapping(value = "/questionbank")
 @CrossOrigin("*")
@@ -75,7 +77,7 @@ public class QuestionController {
             });
             System.out.println("Sending response"+new Date());
 
-            return new ResponseEntity<List<QuestionDto>>(questionDtoList, HttpStatus.OK);
+            return new ResponseEntity<List<QuestionDto>>(questionDtoList.subList(0,min(10,questionDtoList.size())), HttpStatus.OK);
         }
         catch (Exception e)
         {
