@@ -46,7 +46,7 @@ public class ScoreController {
         }
         catch (Exception e)
         {
-            System.out.println("Error while saving score");
+            System.out.println("Error while saving score"+e.getMessage());
             return new ResponseEntity<String>("{\"err\":\"error saving\"}", HttpStatus.OK);
 
         }

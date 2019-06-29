@@ -10,6 +10,7 @@ public class StateDto {
     private String contestName;
     private String contestId;
     private Map<String, String> response;
+    private String skipsUsed;
 
     public StateDto() {
     }
@@ -20,6 +21,15 @@ public class StateDto {
         this.contestName = contestName;
         this.contestId = contestId;
         this.response = response;
+    }
+
+    public StateDto(String stateId, String userId, String contestName, String contestId, Map<String, String> response, String skipsUsed) {
+        this.stateId = stateId;
+        this.userId = userId;
+        this.contestName = contestName;
+        this.contestId = contestId;
+        this.response = response;
+        this.skipsUsed = skipsUsed;
     }
 
     public String getStateId() {
@@ -62,6 +72,14 @@ public class StateDto {
         this.response = response;
     }
 
+    public String getSkipsUsed() {
+        return skipsUsed;
+    }
+
+    public void setSkipsUsed(String skipsUsed) {
+        this.skipsUsed = skipsUsed;
+    }
+
     @Override
     public String toString() {
         return "StateDto{" +
@@ -70,6 +88,7 @@ public class StateDto {
                 ", contestName='" + contestName + '\'' +
                 ", contestId='" + contestId + '\'' +
                 ", response=" + response +
+                ", skipsUsed='" + skipsUsed + '\'' +
                 '}';
     }
 }
