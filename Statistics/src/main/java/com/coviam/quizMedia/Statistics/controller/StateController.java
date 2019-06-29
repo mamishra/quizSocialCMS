@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,6 +25,7 @@ public class StateController {
     @RequestMapping(method = RequestMethod.POST, value = "/saveState")
     public ResponseEntity<?> saveState(@RequestBody State state){
 
+        System.out.println("Save state Requested"+new Date());
         try {
             List<State> list = stateService.saveState(state);
             List<StateDto> stateDtos = new ArrayList<>();
@@ -32,6 +34,7 @@ public class StateController {
                 BeanUtils.copyProperties(sta, stateDto);
                 stateDtos.add(stateDto);
             });
+            System.out.println("Save state Returning response"+new Date());
 
             return new ResponseEntity<List<StateDto>>(stateDtos, HttpStatus.OK);
         }

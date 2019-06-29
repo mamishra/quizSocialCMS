@@ -2,7 +2,7 @@ package com.coviam.quizMedia.Statistics.dto;
 
 import java.util.Date;
 
-public class ScoreDto {
+public class    ScoreDto {
 
     private String scoreId;
     private String userId;

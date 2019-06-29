@@ -1,6 +1,6 @@
 package com.coviam.quizMedia.Statistics.dto;
 
-public class LeaderBoardDto{
+public class LeaderBoardDto implements Comparable{
 
     private String userId;
     private String userName;
@@ -48,4 +48,11 @@ public class LeaderBoardDto{
                 '}';
     }
 
+    @Override
+    public int compareTo(Object o) {
+        LeaderBoardDto leaderBoardDto= (LeaderBoardDto) o;
+        if(score>leaderBoardDto.score)
+            return -1;
+        else return 1;
+    }
 }

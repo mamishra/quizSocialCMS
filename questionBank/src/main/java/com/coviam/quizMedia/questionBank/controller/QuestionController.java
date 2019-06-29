@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -87,14 +88,17 @@ public class QuestionController {
     @RequestMapping(method = RequestMethod.GET, value = "/getAll/{category}")
     public ResponseEntity<?> getquestionByCategory(@PathVariable("category") String category){
 
+        System.out.println("Recieving request"+new Date());
         try {
             List<Question> questionList = questionService.getQuestionByCategory(category);
+            questionList.addAll(new ArrayList<Question>(questionService.getQuestionByCategory(category.toLowerCase())));
             List<QuestionDto> questionDtoList = new ArrayList<>();
             questionList.forEach((que) -> {
                 QuestionDto questionDto = new QuestionDto();
                 BeanUtils.copyProperties(que, questionDto);
                 questionDtoList.add(questionDto);
             });
+            System.out.println("Sending response"+new Date());
 
             return new ResponseEntity<List<QuestionDto>>(questionDtoList, HttpStatus.OK);
         }

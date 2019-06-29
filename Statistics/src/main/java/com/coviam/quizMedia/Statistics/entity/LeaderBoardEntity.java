@@ -16,6 +16,12 @@ public class LeaderBoardEntity {
     private String leaderBoardName;
     private List<LeaderBoardDto> leadersDetails;
 
+    public LeaderBoardEntity(String id, String leaderBoardName, List<LeaderBoardDto> leadersDetails) {
+        this.id = id;
+        this.leaderBoardName = leaderBoardName;
+        this.leadersDetails = leadersDetails;
+    }
+
     public String getId() {
         return id;
     }
@@ -39,4 +45,6 @@ public class LeaderBoardEntity {
     public void setLeadersDetails(List<LeaderBoardDto> leadersDetails) {
         this.leadersDetails = leadersDetails;
     }
+
+
 }
